@@ -5,8 +5,11 @@ An intuitive platform that allows users to review their favorite books and vote 
 ## Features
 
 Book Database: Users can browse books, view details, and see reviews.
+
 Review System: Registered users can write reviews, rate books, and comment on existing reviews.
+
 Voting System: Users can upvote or downvote reviews, providing a community-driven ranking of reviews.
+
 Responsive Frontend: Using React, the platform offers a smooth and responsive user interface.
 
 ## Getting Started
@@ -15,6 +18,7 @@ Responsive Frontend: Using React, the platform offers a smooth and responsive us
 
 Python 3.x
 Node.js and npm
+
 Django and Django Rest Framework
 
 ### Setup & Installation
@@ -56,12 +60,15 @@ Start the React app:
 Backend:
 
 Uses Django's ORM for database operations.
+
 DRF (Django Rest Framework) for creating API endpoints.
+
 SQLite for development database (can be switched to PostgreSQL for production).
 
 Frontend:
 
 React application created with Create React App.
+
 Uses Axios for API requests to the backend.
 
 ### API Endpoints
