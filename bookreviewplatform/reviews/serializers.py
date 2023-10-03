@@ -6,12 +6,12 @@ class BookSerializer(serializers.ModelSerializer):
         model = Book
         fields = '__all__'
         
-    class ReviewSerializer(serializers.ModelSerializer):
+class ReviewSerializer(serializers.ModelSerializer):
         class Meta:
             model = Review
             fields = '__all__'
     
-    class VoteSerializers(serializers.ModelSerializer):
+class VoteSerializers(serializers.ModelSerializer):
         class Meta:
             model = Vote
             fields = '__all__'
