@@ -1,9 +1,10 @@
+// src/components/BookDetail.test.js
 import React from 'react';
 import { render } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import axios from 'axios';
-import BookDetail from './BookDetails';
+import BookDetail from './BookDetail';
 
 jest.mock('axios');
 
@@ -13,10 +14,11 @@ describe('BookDetail', () => {
         axios.get.mockResolvedValue({ data: mockBook });
 
         const { findByText } = render(
-            <MemoryRouter initialEntries={['/book/1']}>
-                <Routes>
-                    <Route path="/book/:id" element={<BookDetail />} />
-                </Routes>
+            <MemoryRouter  initialEntries={['/books/1']}>
+               <Routes>
+                   <Route path='/books/:id' element={ <BookDetail /> } />
+               </Routes>
+               
             </MemoryRouter>
         );
 
