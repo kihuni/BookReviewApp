@@ -6,10 +6,12 @@ import BookDetail from './components/BookDetail';
 function App() {
     return (
         <Router>
-            <Routes>
-                <Route path="/" exact element={BookList} />
-                <Route path="/book/:id" element={BookDetail} />
-            </Routes>
+            <div>
+                <Routes>
+                    <Route path="/reviews/books" exact element={<BookList />} />
+                    <Route path="/reviews/books/:id" element={<BookDetail />} />
+                </Routes>
+            </div>
         </Router>
     );
 }
