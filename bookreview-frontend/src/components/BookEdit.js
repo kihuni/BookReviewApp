@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 
 function BookEdit() {
     const { id } = useParams();
+    const history = useHistory();
 
     const [book, setBook] = useState({
         title: '',
@@ -25,16 +26,19 @@ function BookEdit() {
         fetchBook();
     }, [id]);
 
+    // This function updates the book state
     const handleChange = (event) => {
         const { name, value } = event.target;
         setBook(prevState => ({ ...prevState, [name]: value }));
     }
 
+    // This updates the book data in the backend when the form is submitted
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
             await axios.put(`http://127.0.0.1:8000/books/${id}/`, book);
-            // Redirect to the book details page or some confirmation page after successful update
+            // Redirect to the book details page
+            history.push(`/books/${id}`)
         } catch (error) {
             console.error("Error updating book:", error);
         }

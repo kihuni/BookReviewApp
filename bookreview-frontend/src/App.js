@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import BookList from './components/BookList';
 import BookDetail from './components/BookDetail';
 import BookCreation from './components/BookCreation';
+import BookEdit from './components/BookEdit';
 
 function App() {
     return (
@@ -21,6 +22,7 @@ function App() {
                     <Routes>
                         <Route path="/" exact element={<BookList />} />
                         <Route path="/books/:id" element={<BookDetail />} />
+                        <Route path="/books/edit/:id" element={<BookEdit />} />
                         <Route path="/create" element={<BookCreation />} />
                     </Routes>
                 </main>
