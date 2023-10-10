@@ -11,7 +11,7 @@ const BookDetail = () => {
     useEffect(() => {
         async function fetchBook() {
             try {
-                const response = await axios.get(`http://localhost:8000/reviews/books/${id}`);
+                const response = await axios.get(`http://localhost:8000/books/${id}`);
                 setBook(response.data);
             } catch (error) {
                 console.error("Error fetching book details:", error);
