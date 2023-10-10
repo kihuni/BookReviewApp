@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useParams, useHistory } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 function BookEdit() {
     const { id } = useParams();
-    const history = useHistory();
+    const navigate = useNavigate();
 
     const [book, setBook] = useState({
         title: '',
@@ -37,8 +37,9 @@ function BookEdit() {
         event.preventDefault();
         try {
             await axios.put(`http://127.0.0.1:8000/books/${id}/`, book);
+
             // Redirect to the book details page
-            history.push(`/books/${id}`)
+            navigate(`/books/${id}`)
         } catch (error) {
             console.error("Error updating book:", error);
         }
