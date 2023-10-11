@@ -1,0 +1,27 @@
+ nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+nav .home{
+    font-weight: bold;
+    font-size: 40px;
+    list-style: none;
+    text-decoration: none;
+    color:#f1dfe5; 
+    margin-left: 15px;
+
+}
+
+ul{
+    margin-right: 20px;
+}
+ul .link {
+    margin-right: 10px;
+    list-style: none;
+    text-decoration: none;
+    font-size: 20px;
+    color: #f1dfe5;
+}

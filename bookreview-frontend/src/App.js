@@ -5,25 +5,30 @@ import BookList from './components/BookList';
 import BookDetail from './components/BookDetail';
 import BookCreation from './components/BookCreation';
 import BookEdit from './components/BookEdit';
+import './style.css'
 
 function App() {
     return (
         <Router>
             <div className='App'>
-                <header>
-                    <h1>Welcome to the Book Review App</h1>
+                <div className='header'>
                     <nav>
-                        <Link to="/">Home</Link>
-                        <Link to="/create">Create Book</Link>
+                        <Link className='home' to="/">BookStation</Link>
+                        <ul>
+                            <Link className='link about' to="">About</Link>
+                            <Link className='link create' to="">Create Account</Link>
+                            <Link className='link login' to="">Login</Link>
+                        </ul>
                     </nav>
-                </header>
+                </div>
 
                 <main>
                     <Routes>
                         <Route path="/" exact element={<BookList />} />
-                        <Route path="/books/:id" element={<BookDetail />} />
-                        <Route path="/books/edit/:id" element={<BookEdit />} />
                         <Route path="/create" element={<BookCreation />} />
+                        <Route path="/books/edit/:id" element={<BookEdit />} />
+                        <Route path="/books/:id" element={<BookDetail />} />
+                    
                     </Routes>
                 </main>
                 <footer></footer>
