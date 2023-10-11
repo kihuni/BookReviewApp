@@ -1,8 +1,11 @@
- .header{
+ .App{
     width: 100%;
     height: 100vh;
     background-size: cover;
     background-image: url(images/pexels-ekaterina-astakhova-3949204.jpg)
+ }
+ .header{
+    padding: 10% 10%;
  }
  
  nav {
@@ -51,3 +54,68 @@ nav ul .link::after{
 nav ul .link:hover::after{
     width: 100%;
 }
+
+/*-------BookList--------*/
+.headerList{
+    margin-left: 10%;
+    display: grid;
+    grid-template-columns:repeat(auto-fit, minmax(250px, 1fr));
+    grid-gap: 40px;
+    margin-top: 50px;
+}
+.headerList .containerList{
+    background: #262626;
+    padding: 40px;
+    font-size: 13px;
+    font-weight: 300px;
+    border-radius: 10px;
+    transition: background 0.5s, transform 0.5s;
+}
+
+.headerList .containerList h2 span{
+    color: aqua;
+    font-size: 30px;
+}
+
+.headerList .containerList h2{
+    font-size: 25px;
+    font-weight: 500px;
+    margin-bottom: 15px;
+}
+.headerList .containerList p span{
+    color: aqua;
+    font-size: 15px;
+}
+.headerList .containerList:hover{
+    background: #8a8889;
+    transform: translateY(-10px);
+}
+
+/*-------About--------*/
+/* src/components/About.css */
+
+.about-container {
+    padding: 20px;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    margin: 20px 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.about-container h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 40px;
+}
+
+.about-container p {
+    font-size: 1.1em;
+    line-height: 1.6;
+    text-align: center;
+}
+.about-container .developed {
+    text-align: center;
+    margin-top: 10%;
+}
+
+

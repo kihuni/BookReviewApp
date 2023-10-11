@@ -1,6 +1,6 @@
 import React, { useState, useEffect} from "react";
 import axios from 'axios'
-
+import '../style.css'
 const BookList = () => {
     const [books, setBooks ] = useState([]);
 
@@ -18,11 +18,11 @@ const BookList = () => {
     }, []);
 
     return (
-        <div>
+        <div className="headerList">
             {books.map(book =>(
-                <div key={book.id}>
-                    <h2>{book.title}</h2>
-                    <h2>By {book.author}</h2>
+                <div key={book.id} className="containerList">
+                    <h2 className="bookList"><span>Book Title:</span> {book.title}</h2>
+                    <p className="booklist"><span>By </span>{book.author}</p>
                 </div>
             ))}
         </div>
