@@ -13,7 +13,7 @@ function App() {
             <div className='App'>
                 <div className='header'>
                     <nav>
-                        <Link className='home' to="/">BookStation</Link>
+                        <Link className=' link home' to="/">BookStation</Link>
                         <ul>
                             <Link className='link about' to="">About</Link>
                             <Link className='link create' to="">Create Account</Link>
