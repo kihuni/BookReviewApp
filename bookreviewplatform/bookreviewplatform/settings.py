@@ -27,12 +27,23 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',  # This is to ensure the user is authenticated for all views
+    ),
+}
+
+
 # Application definition
 
 INSTALLED_APPS = [
     'reviews',
     'corsheaders',
     'rest_framework',
+    'rest_framework.authtoken',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
