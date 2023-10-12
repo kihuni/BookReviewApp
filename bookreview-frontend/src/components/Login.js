@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import '../style.css'
 
 const Login = () => {
     const [username, setUsername] = useState("");
@@ -23,7 +24,7 @@ const Login = () => {
     };
 
     return (
-        <div>
+        <div className='headerLogin'>
             <h2>Login</h2>
             {error && <p>{error}</p>}
             <form onSubmit={handleSubmit}>
