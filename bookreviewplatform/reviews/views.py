@@ -2,9 +2,15 @@ from django.shortcuts import render
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from django.contrib.auth.models import User
+from rest_framework.decorators import action
+from rest_framework_jwt.settings import api_settings
 from rest_framework import mixins
 from .models import *
-from .serializers import  BookSerializer, ReviewSerializer,VoteSerializers,UserSerializer
+from .serializers import  BookSerializer, ReviewSerializer,VoteSerializers, UserSerializers
+from django.contrib.auth import authenticate
+
+jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
+jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
 
 # Create your views here.
 
@@ -20,36 +26,34 @@ class VoteViewSet(viewsets.ModelViewSet):
     queryset = Vote.objects.all()
     serializer_class = VoteSerializers
     
-class UserRegisterViewSet(viewsets.ViewSet):
-    queryset = User.object.all()
-    
-    def create(self, request):
-        serializer = UserSerializer(data=request.data)
+class UserViewSet(viewsets.GenericViewSet):
+    queryset = User.objects.all()
+
+    @action(detail=False, methods=['POST'])
+    def register(self, request):
+        serializer =  UserSerializers(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class UserProfileViewSet(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-    
-    def get_object(self):
-        return self.request.user
+    @action(detail=False, methods=['POST'])
+    def login(self, request):
+        username = request.data.get("username")
+        password = request.data.get("password")
 
-class EmailVerificationViewSet(viewsets.ViewSet):
-    def create(self, request):
-        token = request.data.get('token')
-        
-        try:
-            user = User.objects.get(email_verification_token=token)
-            if user:
-                user.email_verified = True
-                user.save()
-                return Response({"message": "Email successfully verified."}, status=status.HTTP_200_OK)
-        except User.DoesNotExist:
-            pass
-        
-        return Response({"error": "Invalid token."}, status=status.HTTP_400_BAD_REQUEST)
-        
-            
+        user = authenticate(username=username, password=password)
+
+        if user:
+            try:
+                payload = jwt_payload_handler(user)
+                token = jwt_encode_handler(payload)
+                return Response({'token': token})
+            except User.DoesNotExist:
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+    @action(detail=False, methods=['GET'])
+    def profile(self, request):
+        serializer =  UserSerializers(request.user)
+        return Response(serializer.data)
