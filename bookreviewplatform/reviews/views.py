@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from django.contrib.auth.models import User
 from rest_framework.decorators import action
 from rest_framework_jwt.settings import api_settings
+from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import mixins
 from .models import *
 from .serializers import  BookSerializer, ReviewSerializer,VoteSerializers, UserSerializers
@@ -46,9 +47,9 @@ class UserViewSet(viewsets.GenericViewSet):
 
         if user:
             try:
-                payload = jwt_payload_handler(user)
-                token = jwt_encode_handler(payload)
-                return Response({'token': token})
+                refresh = RefreshToken.for_user(user)
+                access_token = str(refresh.access_token)
+                return Response({'token': access_token})
             except User.DoesNotExist:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
         return Response(status=status.HTTP_401_UNAUTHORIZED)
