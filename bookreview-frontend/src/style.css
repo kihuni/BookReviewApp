@@ -121,7 +121,6 @@ nav ul .link:hover::after{
 /*------Login------*/
 
 .headerLogin{
-    margin: 5% 5%;
     padding: 5% 30%;
 }
 h2{
@@ -141,3 +140,7 @@ h2{
     color: #262626;
 }
 
+/*------Register--------*/
+form div label{
+    margin-bottom: 20px;
+}
