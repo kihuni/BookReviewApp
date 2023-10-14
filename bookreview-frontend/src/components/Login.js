@@ -11,7 +11,7 @@ const Login = () => {
         e.preventDefault();
 
         try {
-            const response = await axios.post('http://localhost:8000/api-token-auth/', {
+            const response = await axios.post('http://localhost:8000/login/', {
                 username,
                 password
             });

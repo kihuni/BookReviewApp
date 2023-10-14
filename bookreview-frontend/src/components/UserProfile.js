@@ -5,6 +5,7 @@ const UserProfile = () => {
     const [user, setUser] = useState(null);
 
     useEffect(() => {
+        console.log("Fetching data for UserProfile");
         async function fetchUser() {
             const token = localStorage.getItem('token');
             const config = {
@@ -13,6 +14,7 @@ const UserProfile = () => {
 
             try {
                 const response = await axios.get('http://localhost:8000/user-profile/', config);
+                console.log(response.data)
                 setUser(response.data);
             } catch (error) {
                 console.error("Error fetching user profile:", error);
@@ -28,7 +30,6 @@ const UserProfile = () => {
         <div>
             <h2>Welcome, {user.username}!</h2>
             <p>Email: {user.email}</p>
-            {/* Display user reviews and other details */}
         </div>
     );
 }

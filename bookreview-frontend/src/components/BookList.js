@@ -17,6 +17,8 @@ const BookList = () => {
         fetchBooks();
     }, []);
 
+    console.log("Rendering Booklist")
+
     return (
         <div className="headerList">
             {books.map(book =>(
