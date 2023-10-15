@@ -20,6 +20,9 @@ class BookViewSet(viewsets.ModelViewSet):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     
+    def get_queryset(self):
+        return Book.objects.filter(user=self.request.user)
+    
 class ReviewViewSet(viewsets.ModelViewSet):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
@@ -60,4 +63,10 @@ class UserViewSet(viewsets.GenericViewSet):
     @action(detail=False, methods=['GET'])
     def profile(self, request):
         serializer = UserSerializers(request.user)
+        return Response(serializer.data)
+    
+    @action(detail=False, methods=['GET'])
+    def user_books(self, request):
+        user_books = Book.objects.filter(user=request.user)
+        serializer = BookSerializer(user_books, many=True)
         return Response(serializer.data)

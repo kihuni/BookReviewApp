@@ -35,7 +35,7 @@ function App() {
                         <Route path="/about" element={<About />} />
                         <Route path="/register" element={<Register />} />
                         <Route path="/login" element={<Login />} />
-                        <Route path="/user-profile" element={<UserProfile key={new Date()} />} />
+                        <Route path="/user-profile" element={<UserProfile />} />
                     </Routes>
                 </main>
                 <footer></footer>

@@ -12,4 +12,5 @@ urlpatterns = [
     path('register/', UserViewSet.as_view({'post': 'register'})),
     path('login/', UserViewSet.as_view({'post': 'login'})),
     path('user-profile/', UserViewSet.as_view({'get': 'profile'})),
+    path('user-books/', UserViewSet.as_view({'get': 'user_books'})),
 ]
