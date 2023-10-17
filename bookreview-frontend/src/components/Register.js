@@ -1,7 +1,6 @@
-// src/components/Register.js
-
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import '../style.css'
 
 function Register() {
@@ -12,6 +11,7 @@ function Register() {
         first_name: '',
         last_name: ''
     });
+    const navigate = useNavigate()
     const [message, setMessage] = useState('');
 
     const handleChange = (e) => {
@@ -25,7 +25,8 @@ function Register() {
         e.preventDefault();
         try {
             const response = await axios.post('http://127.0.0.1:8000/register/', formData);
-            setMessage('Registration successful! Please log in.');
+            setMessage('Registration successful!');
+            navigate('/login')
         } catch (error) {
             setMessage('Error during registration. Please try again.');
         }
