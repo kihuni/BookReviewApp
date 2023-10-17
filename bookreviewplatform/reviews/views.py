@@ -9,19 +9,26 @@ from rest_framework import mixins
 from .models import *
 from .serializers import  BookSerializer, ReviewSerializer,VoteSerializers, UserSerializers
 from django.contrib.auth import authenticate
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated, BasePermission, SAFE_METHODS
 
 jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
 jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
 
 # Create your views here.
+class ReadOnly(BasePermission):
+    def has_permission(self,request,view):
+        return request.method in SAFE_METHODS
 
 class BookViewSet(viewsets.ModelViewSet):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
+    permission_classes = [IsAuthenticated | ReadOnly]
     
     def get_queryset(self):
         return Book.objects.filter(user=self.request.user)
+    
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
     
 class ReviewViewSet(viewsets.ModelViewSet):
     queryset = Review.objects.all()

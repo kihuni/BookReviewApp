@@ -3,7 +3,7 @@ from .models import Book, Review, Vote
 
 @admin.register(Book)
 class BookAdmin(admin.ModelAdmin):
-    list_display = ['title', 'author', 'published_date']
+    list_display = ['title', 'user', 'author', 'published_date']
     search_fields = ['title', 'author']
 
 @admin.register(Review)
