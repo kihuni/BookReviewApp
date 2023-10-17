@@ -79,5 +79,4 @@ Endpoint	Method	Description
 /api/reviews/	POST	Create a new review
 /api/votes/	GET	List all votes
 /api/votes/	POST	Upvote or downvote a review
-
 ```
