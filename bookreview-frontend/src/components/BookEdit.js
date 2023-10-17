@@ -11,12 +11,18 @@ function BookEdit() {
         author: '',
         description: ''
     });
+  
 
     useEffect(() => {
+        const token = localStorage.getItem('token');
+        const config ={
+            headers: { Authorization: `Bearer ${token}`}
+        }
+
         // Fetch the current data of the book
         async function fetchBook() {
             try {
-                const response = await axios.get(`http://127.0.0.1:8000/books/${id}/`);
+                const response = await axios.get(`http://127.0.0.1:8000/books/${id}/`, config);
                 setBook(response.data);
             } catch (error) {
                 console.error("Error fetching book data:", error);
@@ -35,8 +41,14 @@ function BookEdit() {
     // This updates the book data in the backend when the form is submitted
     const handleSubmit = async (event) => {
         event.preventDefault();
+        
+        const token = localStorage.getItem('token');
+        const config ={
+                headers: { Authorization: `Bearer ${token}`}
+            }
+       
         try {
-            await axios.put(`http://127.0.0.1:8000/books/${id}/`, book);
+            await axios.put(`http://127.0.0.1:8000/books/${id}/`, book, config);
 
             // Redirect to the book details page
             navigate(`/books/${id}`)

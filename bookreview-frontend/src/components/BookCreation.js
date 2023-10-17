@@ -10,11 +10,17 @@ const BookCreation = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        const token = localStorage.getItem('token');
+
         try {
             await axios.post('http://localhost:8000/books/', {
                 title,
                 author,
                 description
+            }, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
             });
             setSuccessMessage('Book successfully created!');
             setTitle('');
