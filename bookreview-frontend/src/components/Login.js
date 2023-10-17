@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import '../style.css'
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState(null);
+
+    const navigate = useNavigate()
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -17,7 +20,7 @@ const Login = () => {
             });
 
             localStorage.setItem('token', response.data.token); // The token is saved to local storage
-            window.location.reload(); // or navigate the user to another page
+            navigate('/user-profile')
         } catch (err) {
             setError("Invalid credentials. Please try again.");
         }
