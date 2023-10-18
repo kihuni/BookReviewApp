@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import '../style.css'
 
 const UserProfile = () => {
     const [user, setUser] = useState(null);
@@ -31,7 +32,7 @@ const UserProfile = () => {
     if (!user) return <div>Loading...</div>;
 
     return (
-        <div>
+        <div className='userProfile'>
             <h2>Welcome, {user.username}!</h2>
             <p>Email: {user.email}</p>
 

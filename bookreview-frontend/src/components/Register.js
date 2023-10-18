@@ -8,11 +8,14 @@ function Register() {
         username: '',
         email: '',
         password: '',
+        confirmedPassword:'',
         first_name: '',
         last_name: ''
     });
     const navigate = useNavigate()
     const [message, setMessage] = useState('');
+    const [isInvalidPassword, setIsInvalidPassword] = useState(false);
+
 
     const handleChange = (e) => {
         setFormData({
@@ -20,11 +23,35 @@ function Register() {
             [e.target.name]: e.target.value
         });
     }
+    const isStrongPassword = (password) => {
+        const hasUppercase = /[A-Z]/.test(password);
+        const hasLowercase = /[a-z]/.test(password);
+        const hasDigit = /[0-9]/.test(password);
+        const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+        
+        return password.length >= 8 && hasUppercase && hasLowercase && hasDigit && hasSpecialChar;
+    }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+       
+    if (formData.password !== formData.confirmedPassword) {
+        setMessage("Passwords do not match.");
+        return;
+    }
+
+    if (!isStrongPassword(formData.password)) {
+        setMessage("Password must meet the requirements: At least 8 characters, 1 uppercase, 1 lowercase, 1 digit, and 1 special character.");
+        setIsInvalidPassword(true); 
+        return;
+    } else {
+        setIsInvalidPassword(false); 
+    }
+
+        const { confirmedPassword, ...submitData } = formData;
         try {
-            const response = await axios.post('http://127.0.0.1:8000/register/', formData);
+            const response = await axios.post('http://127.0.0.1:8000/register/', submitData);
             setMessage('Registration successful!');
             navigate('/login')
         } catch (error) {
@@ -46,7 +73,20 @@ function Register() {
                 </div>
                 <div>
                     <label htmlFor="password">Password</label>
-                    <input type="password" id="password" name="password" value={formData.password} onChange={handleChange} required />
+                    <input 
+                    type="password" 
+                    id="password" 
+                    name="password" 
+                    value={formData.password} 
+                    onChange={handleChange}
+                    required
+                    style={isInvalidPassword ? { borderColor: 'red' } : {}}
+                     />
+                    <small>Password should be at least 8 characters, have an uppercase, a lowercase, a digit, and a special character.</small>
+                </div>
+                <div>
+                    <label htmlFor="confirmedPassword">Confirm Password</label>
+                    <input type="password" id="confirmedPassword" name="confirmedPassword" value={formData.confirmedPassword} onChange={handleChange} required />
                 </div>
                 <div>
                     <label htmlFor="first_name">First Name</label>

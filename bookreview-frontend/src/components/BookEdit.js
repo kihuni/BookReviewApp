@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
+import '../style.css'
 
 function BookEdit() {
     const { id } = useParams();
@@ -58,7 +59,7 @@ function BookEdit() {
     }
 
     return (
-        <div>
+        <div className='bookedit'>
             <h2>Edit Book</h2>
             <form onSubmit={handleSubmit}>
                 <div>

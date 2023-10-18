@@ -145,3 +145,14 @@ h2{
 form div label{
     margin-bottom: 20px;
 }
+
+/*------User profile--------*/
+.userProfile{
+    text-align: center;
+}
+
+/*------bookedit---------*/
+
+.bookedit{
+    text-align: center;
+}
