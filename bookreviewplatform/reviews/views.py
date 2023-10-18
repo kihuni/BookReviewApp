@@ -25,7 +25,9 @@ class BookViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated | ReadOnly]
     
     def get_queryset(self):
-        return Book.objects.filter(user=self.request.user)
+        if self.request.user.is_authenticated:
+            return Book.objects.filter(user=self.request.user)
+        return Book.objects.all()
     
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
