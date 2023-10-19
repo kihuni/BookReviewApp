@@ -74,7 +74,7 @@ function BookEdit() {
             <form onSubmit={handleSubmit}>
              <div>
                     <label htmlFor="cover_image">Cover Image:</label>
-                    {coverImageUrl && <img src={coverImageUrl} alt="Book cover" width="100" />}
+                    {coverImageUrl && <img src={coverImageUrl} alt="Book cover" />}
                     <input 
                         type="file" 
                         id="cover_image" 

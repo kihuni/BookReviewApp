@@ -89,6 +89,7 @@ nav ul .link:hover::after{
     grid-template-columns:repeat(auto-fit, minmax(250px, 1fr));
     grid-gap: 40px;
     margin-top: 50px;
+   
 }
 .headerList .containerList{
     background: #262626;
@@ -109,6 +110,10 @@ nav ul .link:hover::after{
     font-weight: 500px;
     margin-bottom: 15px;
 }
+.headerList .containerList h2>Link{
+    text-decoration: none;
+    list-style: none;
+}
 .headerList .containerList p span{
     color: aqua;
     font-size: 15px;
@@ -116,6 +121,10 @@ nav ul .link:hover::after{
 .headerList .containerList:hover{
     background: #8a8889;
     transform: translateY(-10px);
+}
+.headerList .containerList img{
+    max-width: 100%;
+    display: block;;
 }
 
 /*-------About--------*/

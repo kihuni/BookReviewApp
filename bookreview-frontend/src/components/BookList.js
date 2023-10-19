@@ -1,5 +1,6 @@
 import React, { useState, useEffect} from "react";
 import axios from 'axios'
+import { Link } from 'react-router-dom'
 import '../style.css'
 const BookList = () => {
     const [books, setBooks ] = useState([]);
@@ -31,8 +32,10 @@ const BookList = () => {
             <div className="headerList">
                 {books.map(book =>(
                     <div key={book.id} className="containerList">
-                        <img src={`http://127.0.0.1:8000${book.cover_image}`} alt={book.title} width="100" />
-                        <h2 className="bookList"><span>Book Title:</span> {book.title}</h2>
+                        <img src={book.cover_image} alt={book.title} />
+                        <h2 className="bookList">
+                           <Link to={`/books/${book.id}`}><span>Book Title:</span> {book.title}</Link> 
+                        </h2>
                         <p className="booklist"><span>By </span>{book.author}</p>
                     </div>
                 ))}
