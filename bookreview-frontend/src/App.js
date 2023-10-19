@@ -15,17 +15,18 @@ function App() {
     return (
         <Router>
             <div className='App'>
-                <div className='header'>
-                    <nav>
-                        <Link className=' link home' to="/">BookStation</Link>
-                        <ul>
-                            <Link className='link about' to="/about">About</Link>
-                            <Link className='link create' to="/register">Create Account</Link>
-                            <Link className='link login' to="/login">Login</Link>
-                        </ul>
-                    </nav>
+                <div className='container'>
+                    <div className='header'>
+                        <nav>
+                            <Link className=' link home' to="/">BookStation</Link>
+                            <ul>
+                                <Link className='link about' to="/about">About</Link>
+                                <Link className='link create' to="/register">Create Account</Link>
+                                <Link className='link login' to="/login">Login</Link>
+                            </ul>
+                        </nav>
+                    </div>
                 </div>
-
                 <main>
                     <Routes>
                         <Route path="/" exact element={<BookList />} />

@@ -12,7 +12,8 @@ function BookEdit() {
         author: '',
         description: ''
     });
-  
+  const [coverImage, setCoverImage] = useState(null);
+  const [coverImageUrl, setCoverImageUrl] = useState('');
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -25,6 +26,7 @@ function BookEdit() {
             try {
                 const response = await axios.get(`http://127.0.0.1:8000/books/${id}/`, config);
                 setBook(response.data);
+                setCoverImageUrl(`http://127.0.0.1:8000${response.data.cover_image}`);
             } catch (error) {
                 console.error("Error fetching book data:", error);
             }
@@ -45,23 +47,42 @@ function BookEdit() {
         
         const token = localStorage.getItem('token');
         const config ={
-                headers: { Authorization: `Bearer ${token}`}
-            }
+            headers: { Authorization: `Bearer ${token}`}
+        };
+    
+        const formData = new FormData();
+        formData.append('title', book.title);
+        formData.append('author', book.author);
+        formData.append('description', book.description);
+        if (coverImage) {
+            formData.append('cover_image', coverImage);
+        }
        
         try {
-            await axios.put(`http://127.0.0.1:8000/books/${id}/`, book, config);
-
+            await axios.put(`http://127.0.0.1:8000/books/${id}/`, formData, config);
             // Redirect to the book details page
             navigate(`/books/${id}`)
         } catch (error) {
             console.error("Error updating book:", error);
         }
-    }
+    };
+    
 
     return (
         <div className='bookedit'>
             <h2>Edit Book</h2>
             <form onSubmit={handleSubmit}>
+             <div>
+                    <label htmlFor="cover_image">Cover Image:</label>
+                    {coverImageUrl && <img src={coverImageUrl} alt="Book cover" width="100" />}
+                    <input 
+                        type="file" 
+                        id="cover_image" 
+                        name="cover_image" 
+                        onChange={e => setCoverImage(e.target.files[0])} 
+                    />
+               </div>
+
                 <div>
                     <label htmlFor="title">Title:</label>
                     <input 
