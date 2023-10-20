@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const BookCreation = () => {
@@ -7,6 +8,8 @@ const BookCreation = () => {
     const [description, setDescription] = useState('');
     const [coverImage, setCoverImage] = useState(null)
     const [successMessage, setSuccessMessage] = useState('');
+    const navigate = useNavigate();
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -15,7 +18,7 @@ const BookCreation = () => {
         const formData = new FormData();
 
         formData.append('title', title)
-        formData.append('autho', author)
+        formData.append('author', author)
         formData.append('description', description)
         formData.append('cover_image', coverImage)
 
@@ -31,14 +34,15 @@ const BookCreation = () => {
             setTitle('');
             setAuthor('');
             setDescription('');
-            setCoverImage(null);  
+            setCoverImage(null); 
+            navigate('/')
         } catch (error) {
             console.error('Error creating book:', error);
         }
     };
 
     return (
-        <div>
+        <div className='bookCreation'>
             <form onSubmit={handleSubmit}>
               <div>
                     <label htmlFor='cover_image'>Cover Image:</label>
