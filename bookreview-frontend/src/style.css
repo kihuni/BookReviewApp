@@ -1,16 +1,18 @@
- .App{
+.App{
     width: 100%;
     height: 100vh;
     background-size: cover;
     background-color: 24, 26, 27;
-    
+    font-family: Arial, sans-serif;
  }
- .header{
+ /*------------ Nav bar-------*/
+
+ .header {
     padding: 5% 10%;
     background-color: #262626;
- }
- 
- nav {
+}
+
+nav {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -18,141 +20,251 @@
     margin-top: 30px;
 }
 
-nav .home{
+nav .home {
     font-weight: bold;
     font-size: 40px;
-    list-style: none;
     text-decoration: none;
-    color:#f1dfe5; 
+    color: #f1dfe5;
     margin-left: 15px;
-
 }
 
-
-
-
-ul{
+ul {
+    display: flex;
+    align-items: center;
     margin-right: 20px;
+    padding: 0;
 }
-nav ul .link {
+
+nav ul a.link {
     margin-right: 10px;
-    list-style: none;
     text-decoration: none;
     font-size: 20px;
     color: #f1dfe5;
     position: relative;
+    padding: 5px 10px;
+    transition: color 0.3s;
 }
 
-nav ul .link::after{
+nav ul a.link:hover {
+    color: #c098a4;
+}
+
+nav ul a.link::after {
     content: '';
     width: 0%;
     height: 3px;
     background: #c098a4;
-    position:absolute;
+    position: absolute;
     left: 0;
     bottom: -6px;
     transition: 0.5s;
 }
-nav ul .link:hover::after{
+
+nav ul a.link:hover::after {
     width: 100%;
 }
 
+/* Mobile Styles */
+@media only screen and (max-width: 768px) {
+    nav {
+        flex-direction: column;
+    }
+
+    nav .home {
+        margin-bottom: 20px;
+    }
+
+    ul {
+        flex-direction: column;
+        align-items: flex-start;
+        margin: 0;
+        width: 100%;
+        display: none; 
+    }
+    body.menu-active ul {
+        display: flex;
+    }
+
+    nav ul a.link {
+        margin-right: 0;
+        margin-bottom: 10px;
+        width: 100%;
+        text-align: left;
+    }
+
+    .hamburger {
+        display: flex;
+        flex-direction: column;
+        cursor: pointer;
+        margin-left: auto;
+    }
+
+    .hamburger div {
+        width: 30px;
+        height: 3px;
+        background-color: #cf124e;
+        margin: 2px 0;
+    }
+
+    body.menu-active ul {
+        display: flex;
+    }
+}
+
+
+
 
 /*-------BookList--------*/
-.ListHeader{
-   text-align: center;
-}
-.ListHeader div{
-    padding: 40px;
-    font-size: 13px;
-    font-weight: 300px;
-    border-radius: 10px;
-    margin-top: 50px;
-}
-.ListHeader div h2{
-    font-size: 50px;
-    color: rgb(51, 102, 51)
-}
-.ListHeader div p{
-    font-size: 25px;
-    color: #4e2037;
-}
-.ListHeader div h2 span{
-    color: rgb(6, 24, 9);
-}
-.ListHeader div p span{
-    color: #160910;
-}
-.headerList{
-    margin-left: 10%;
-    display: grid;
-    grid-template-columns:repeat(auto-fit, minmax(250px, 1fr));
-    grid-gap: 40px;
-    margin-top: 50px;
-   
-}
-.headerList .containerList{
-    background: #262626;
-    padding: 40px;
-    font-size: 13px;
-    font-weight: 300px;
-    border-radius: 10px;
-    transition: background 0.5s, transform 0.5s;
-}
 
-.headerList .containerList h2 span{
-    color: aqua;
-    font-size: 30px;
-}
-
-.headerList .containerList h2{
-    font-size: 25px;
-    font-weight: 500px;
-    margin-bottom: 15px;
-}
-.headerList .containerList h2>Link{
-    text-decoration: none;
-    list-style: none;
-}
-.headerList .containerList p span{
-    color: aqua;
-    font-size: 15px;
-}
-.headerList .containerList:hover{
-    background: #8a8889;
-    transform: translateY(-10px);
-}
-.headerList .containerList img{
-    max-width: 100%;
-    display: block;;
-}
+.ListHeader {
+    text-align: center;
+ }
+ 
+ .ListHeader div {
+     padding: 40px;
+     font-size: 13px;
+     font-weight: 300;
+     border-radius: 10px;
+     margin-top: 50px;
+ }
+ 
+ .ListHeader div h2 {
+     font-size: 50px;
+     color: rgb(51, 102, 51);
+ }
+ 
+ .ListHeader div p {
+     font-size: 25px;
+     color: #4e2037;
+ }
+ 
+ .ListHeader div h2 span {
+     color: rgb(6, 24, 9);
+ }
+ 
+ .ListHeader div p span {
+     color: #160910;
+ }
+ 
+ .headerList {
+     margin-left: 10%;
+     display: grid;
+     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+     grid-gap: 40px;
+     margin-top: 50px;
+ }
+ 
+ .headerList .containerList {
+     background: #262626;
+     padding: 40px;
+     font-size: 13px;
+     font-weight: 300;
+     border-radius: 10px;
+     transition: background 0.5s, transform 0.5s;
+ }
+ 
+ .headerList .containerList h2 span {
+     color: aqua;
+     font-size: 30px;
+ }
+ 
+ .headerList .containerList h2 {
+     font-size: 25px;
+     font-weight: 500;
+     margin-bottom: 15px;
+ }
+ 
+ .headerList .containerList h2 > Link,
+ .headerList .containerList h2 a {
+     text-decoration: none;
+     color: white;
+ }
+ 
+ .headerList .containerList p span {
+     color: aqua;
+     font-size: 15px;
+ }
+ 
+ .headerList .containerList:hover {
+     background: #8a8889;
+     transform: translateY(-10px);
+ }
+ 
+ .headerList .containerList img {
+     max-width: 100%;
+     border-radius: 5px; 
+     margin-bottom: 20px;
+ }
+ 
+ /* Mobile Responsiveness */
+ 
+ @media only screen and (max-width: 768px) {
+     .ListHeader div {
+         padding: 20px;
+     }
+ 
+     .ListHeader div h2 {
+         font-size: 30px;
+     }
+ 
+     .ListHeader div p {
+         font-size: 20px;
+     }
+ 
+     .headerList {
+         margin-left: 5%;
+     }
+ 
+     .headerList .containerList {
+         padding: 20px;
+     }
+ }
+ 
 
 /*-------About--------*/
-/* src/components/About.css */
-
 .about-container {
+    max-width: 800px;
+    margin: 50px auto; 
     padding: 20px;
-    border-radius: 5px;
-    background-color: #f9f9f9;
-    margin: 20px 0;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    background-color: #f9f9f9; 
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); 
 }
 
 .about-container h2 {
-    text-align: center;
-    color: #333;
-    margin-bottom: 40px;
+    font-size: 28px;
+    margin-bottom: 20px;
+    color: #333; 
 }
 
 .about-container p {
-    font-size: 1.1em;
-    line-height: 1.6;
-    text-align: center;
+    font-size: 18px;
+    line-height: 1.5;
+    color: #555; 
+    margin-bottom: 20px;
 }
+
 .about-container .developed {
-    text-align: center;
-    margin-top: 10%;
+    font-style: italic;
+    color: #777;
 }
+
+/* Mobile Styles */
+@media only screen and (max-width: 768px) {
+    .about-container {
+        margin: 20px 10px;
+        padding: 15px; 
+    }
+
+    .about-container h2 {
+        font-size: 24px;
+    }
+
+    .about-container p {
+        font-size: 16px; 
+    }
+}
+
 
 /*------Login------*/
 
@@ -177,35 +289,363 @@ h2{
 }
 
 /*------Register--------*/
-form div label{
+.headerLogin {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    margin: 50px auto;
+    border: 1px solid #ccc;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+}
+
+.headerLogin h2 {
     margin-bottom: 20px;
 }
 
-/*------User profile--------*/
-.userProfile{
-    text-align: center;
+.headerLogin form {
+    width: 100%;
 }
 
-/*------bookedit---------*/
+.headerLogin form div {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+}
 
-.bookedit{
-    text-align: center;
+.headerLogin form label {
+    margin-bottom: 10px;
 }
-form div, button{
-    margin-top: 20px;
+
+.headerLogin form input {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
 }
-form div input, textarea{
-    margin-left: 10px;
-    padding: 10px 10px;
+
+.headerLogin form small {
+    margin-top: 5px;
+    color: grey;
 }
-button{
+
+.headerLogin form button {
     padding: 10px 20px;
-    background: #ac1e65;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 4px;
     cursor: pointer;
+    transition: background-color 0.3s;
 }
 
-/*------bookcreation---------*/
+.headerLogin form button:hover {
+    background-color: #0056b3;
+}
 
-.bookCreation{
-    text-align: center;
+.headerLogin p {
+    color: red;
+    margin-top: 10px;
+}
+
+/* Responsive Styling */
+@media only screen and (max-width: 600px) {
+    .headerLogin {
+        width: 90%;
+    }
+}
+
+/*-------UserProfile--------*/
+
+.userProfile {
+    max-width: 800px; 
+    margin: 40px auto; 
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #f9f9f9; 
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); 
+}
+
+.userProfile h2 {
+    font-size: 28px;
+    color: #333;
+    border-bottom: 1px solid #ddd; 
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.userProfile p {
+    font-size: 18px;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+.userProfile h3 {
+    font-size: 24px;
+    color: #444;
+    margin-top: 30px;
+}
+
+.userProfile div {
+    padding: 10px 0; 
+    border-bottom: 1px dashed #ccc; 
+    margin-bottom: 20px;
+}
+
+.userProfile div h4 {
+    font-size: 20px;
+    color: #666;
+}
+
+.userProfile div p {
+    font-size: 18px;
+    color: #777;
+}
+
+.userProfile a {
+    display: inline-block; 
+    padding: 10px 20px;
+    background-color: #262626;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-right: 10px;
+    transition: background-color 0.3s; 
+}
+
+.userProfile a:hover {
+    background-color: #555; 
+}
+
+/* Mobile Responsiveness */
+
+@media only screen and (max-width: 768px) {
+    .userProfile {
+        margin: 20px 10px; 
+        padding: 15px;
+    }
+
+    .userProfile h2 {
+        font-size: 24px;
+    }
+
+    .userProfile p {
+        font-size: 16px;
+    }
+
+    .userProfile h3 {
+        font-size: 20px;
+    }
+
+    .userProfile div h4 {
+        font-size: 18px;
+    }
+
+    .userProfile div p {
+        font-size: 16px;
+    }
+}
+
+
+/*-------BookEdit--------*/
+
+.bookedit {
+    max-width: 600px; 
+    margin: 40px auto; 
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #f9f9f9; 
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); 
+}
+
+.bookedit h2 {
+    font-size: 28px;
+    color: #333;
+    margin-bottom: 30px; 
+}
+.bookedit form > div {
+    margin-bottom: 20px;
+}
+
+.bookedit label {
+    display: block; 
+    font-size: 16px;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+.bookedit input[type="text"],
+.bookedit textarea {
+    width: 100%; 
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.bookedit textarea {
+    resize: vertical; 
+    min-height: 100px; 
+}
+
+.bookedit img {
+    max-width: 100px;
+    display: block;
+    margin: 10px 0;
+    border-radius: 5px;
+}
+
+.bookedit button {
+    background-color: #262626;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.bookedit button:hover {
+    background-color: #555;
+}
+
+/* Mobile Responsiveness */
+
+@media only screen and (max-width: 768px) {
+    .bookedit {
+        margin: 20px 10px;
+        padding: 15px;
+    }
+
+    .bookedit h2 {
+        font-size: 24px;
+    }
+}
+
+/*-------BookDetail--------*/
+
+div.bookDetail {
+    max-width: 800px; 
+    margin: 40px auto; 
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); 
+}
+
+.bookDetail h2 {
+    font-size: 32px;
+    color: #333;
+    border-bottom: 2px solid #ddd; 
+    margin-bottom: 20px;
+}
+
+
+.bookDetail p:first-child {
+    font-size: 20px;
+    color: #555;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+
+.bookDetail p:last-child {
+    font-size: 18px;
+    color: #666;
+    line-height: 1.5; 
+}
+
+/* Mobile Responsiveness */
+
+@media only screen and (max-width: 768px) {
+    .bookDetail {
+        margin: 20px 10px;
+        padding: 15px;
+    }
+
+    .bookDetail h2 {
+        font-size: 28px;
+    }
+
+    .bookDetail p:first-child {
+        font-size: 18px;
+    }
+
+    .bookDetail p:last-child {
+        font-size: 16px;
+    }
+}
+
+
+/*-------BookCreation--------*/
+
+.bookCreation {
+    max-width: 600px; 
+    margin: 40px auto; 
+    border-radius: 10px;
+    background-color: #f9f9f9; 
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+.bookCreation form > div {
+    margin-bottom: 20px; 
+}
+
+.bookCreation label {
+    display: block; 
+    font-size: 16px;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+.bookCreation input[type="text"],
+.bookCreation textarea,
+.bookCreation input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.bookCreation textarea {
+    resize: vertical; 
+    min-height: 120px; 
+}
+
+.bookCreation button {
+    background-color: #262626;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s; 
+}
+
+.bookCreation button:hover {
+    background-color: #555;
+}
+
+.bookCreation p {
+    font-size: 18px;
+    color: #0a7f00; 
+    margin-top: 20px;
+    font-weight: bold;
+}
+
+/* Mobile Responsiveness */
+
+@media only screen and (max-width: 768px) {
+    .bookCreation {
+        margin: 20px 10px;
+        padding: 15px;
+    }
+
+    .bookCreation label,
+    .bookCreation input[type="text"],
+    .bookCreation textarea {
+        font-size: 14px;
+    }
 }

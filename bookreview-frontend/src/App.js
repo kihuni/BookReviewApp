@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { Link } from 'react-router-dom'
 import BookList from './components/BookList';
@@ -12,6 +12,16 @@ import UserProfile from './components/UserProfile';
 import Register from './components/Register';
 
 function App() {
+    const [menuActive, setMenuActive] = useState(false);
+
+    useEffect(() => {
+        if (menuActive) {
+            document.body.classList.add("menu-active");
+        } else {
+            document.body.classList.remove("menu-active");
+        }
+    }, [menuActive]);
+
     return (
         <Router>
             <div className='App'>
@@ -19,6 +29,14 @@ function App() {
                     <div className='header'>
                         <nav>
                             <Link className=' link home' to="/">BookStation</Link>
+
+                            {/* Hamburger Menu */}
+                            <div className="hamburger" onClick={() => setMenuActive(!menuActive)}>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                            </div>
+
                             <ul>
                                 <Link className='link about' to="/about">About</Link>
                                 <Link className='link create' to="/register">Create Account</Link>
