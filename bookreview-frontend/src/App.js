@@ -9,7 +9,7 @@ import './style.css';
 import Login from './components/Login';
 import UserProfile from './components/UserProfile';
 import Register from './components/Register';
-import NavBar from './components/NavBar'; // Import the NavBar component
+import NavBar from './components/NavBar'; 
 import axios from 'axios';
 
 function App() {
@@ -24,22 +24,22 @@ function App() {
         }
     }, [menuActive]);
 
-    useEffect(() => {
-        async function fetchUserProfile() {
-            const token = localStorage.getItem('token');
-            if (token) {
-                const config = {
-                    headers: { Authorization: `Bearer ${token}` }
-                };
-                try {
-                    const response = await axios.get('http://localhost:8000/user-profile/', config);
-                    setUser(response.data);
-                } catch (error) {
-                    console.error("Error fetching user profile:", error);
-                }
+    const fetchUserProfile = async () => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            const config = {
+                headers: { Authorization: `Bearer ${token}` }
+            };
+            try {
+                const response = await axios.get('http://localhost:8000/user-profile/', config);
+                setUser(response.data);
+            } catch (error) {
+                console.error("Error fetching user profile:", error);
             }
         }
+    }
 
+    useEffect(() => {
         fetchUserProfile();
     }, []);
 
@@ -55,7 +55,7 @@ function App() {
                         <Route path="/books/:id" element={<BookDetail />} />
                         <Route path="/about" element={<About />} />
                         <Route path="/register" element={<Register />} />
-                        <Route path="/login" element={<Login />} />
+                        <Route path="/login" element={<Login fetchUserProfile={fetchUserProfile} setUser={setUser} />} />
                         <Route path="/user-profile" element={<UserProfile />} />
                     </Routes>
                 </main>

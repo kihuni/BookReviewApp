@@ -3,7 +3,7 @@ import axios from 'axios';
 import '../style.css';
 import { useNavigate } from 'react-router-dom';
 
-const Login = ({ fetchUserProfile }) => {   // Added fetchUserProfile as a prop
+const Login = ({ fetchUserProfile, setUser }) => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState(null);
@@ -19,11 +19,9 @@ const Login = ({ fetchUserProfile }) => {   // Added fetchUserProfile as a prop
                 password
             });
 
-            localStorage.setItem('token', response.data.token); // The token is saved to local storage
-            
-            fetchUserProfile();  // Call fetchUserProfile function upon successful login
-
-            navigate('/user-profile');
+            localStorage.setItem('token', response.data.token); // Save the token to local storage
+            await fetchUserProfile();  // Fetch the user profile
+            navigate('/user-profile'); // Navigate to the user profile page
         } catch (err) {
             setError("Invalid credentials. Please try again.");
         }
