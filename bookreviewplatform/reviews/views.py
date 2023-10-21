@@ -79,3 +79,26 @@ class UserViewSet(viewsets.GenericViewSet):
         user_books = Book.objects.filter(user=request.user)
         serializer = BookSerializer(user_books, many=True)
         return Response(serializer.data)
+
+class ReviewViewSet(viewsets.ModelViewSet):
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        
+        book_id = self.request.data.get('book')
+        book_instance = Book.objects.get(id=book_id)
+        serializer.save(user=self.request.user, book=book_instance)
+
+    @action(detail=True, methods=['POST'])
+    def vote(self, request, pk=None):
+        review = self.get_object()
+        value = request.data.get('value')
+        vote, created = Vote.objects.get_or_create(review=review, user=request.user, defaults={'value': value})
+
+        if not created:
+            vote.value = value
+            vote.save()
+
+        return Response({"message": "Vote casted successfully!"}, status=status.HTTP_201_CREATED)

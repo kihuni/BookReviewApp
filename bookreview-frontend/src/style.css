@@ -524,60 +524,165 @@ h2{
     }
 }
 
-/*-------BookDetail--------*/
+/* BookDetail Component Styling */
 
-div.bookDetail {
-    max-width: 800px; 
-    margin: 40px auto; 
+.bookdetails {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     padding: 20px;
+}
+
+.bookCover {
+    max-width: 200px;   /* Adjust based on your preference */
+    height: auto;      /* Maintains the image aspect ratio */
     border-radius: 10px;
-    background-color: #f9f9f9;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); 
-}
-
-.bookDetail h2 {
-    font-size: 32px;
-    color: #333;
-    border-bottom: 2px solid #ddd; 
+    box-shadow: 0px 0px 15px rgba(0,0,0,0.2);  /* Adds a light shadow to the image */
     margin-bottom: 20px;
 }
 
-
-.bookDetail p:first-child {
-    font-size: 20px;
-    color: #555;
-    font-weight: bold;
-    margin-bottom: 20px;
+.bookdetails h2 {
+    font-size: 24px;
+    margin: 10px 0;
 }
 
-
-.bookDetail p:last-child {
+.bookdetails p {
     font-size: 18px;
-    color: #666;
-    line-height: 1.5; 
+    color: #777;
+    margin: 5px 0;
+}
+
+
+/* Mobile Responsiveness */
+
+@media only screen and (max-width: 768px) {
+    .bookdetails {
+        margin: 20px 10px; 
+        padding: 15px;
+    }
+
+    .bookdetails h2 {
+        font-size: 24px;
+    }
+
+    .bookdetails p {
+        font-size: 16px;
+    }
+}
+
+/* ReviewForm Component Styling */
+
+.reviewForm {
+    margin: 20px 0;
+    background-color: #f4f4f4;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.reviewForm form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.reviewForm textarea {
+    resize: vertical;
+    padding: 10px;
+    font-size: 16px;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.reviewForm select {
+    width: 80px;
+    padding: 5px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.reviewForm button {
+    padding: 10px 15px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #007BFF;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.reviewForm button:hover {
+    background-color: #0056b3;
+}
+
+.reviewForm p {
+    color: red;
+    font-size: 16px;
+}
+
+/* ReviewItem Component Styling */
+
+.reviewitems {
+    margin: 20px 0;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #fff;
+}
+
+.reviewitems p {
+    margin-bottom: 10px;
+}
+
+.reviewitems button {
+    padding: 5px 10px;
+    margin-right: 10px;
+    cursor: pointer;
+    background-color: #007BFF;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.reviewitems button:last-child {
+    margin-right: 0;
+}
+
+.reviewitems button:hover {
+    background-color: #0056b3;
 }
 
 /* Mobile Responsiveness */
 
 @media only screen and (max-width: 768px) {
-    .bookDetail {
-        margin: 20px 10px;
-        padding: 15px;
+    .reviewForm textarea {
+        font-size: 14px;
     }
 
-    .bookDetail h2 {
-        font-size: 28px;
-    }
-
-    .bookDetail p:first-child {
-        font-size: 18px;
-    }
-
-    .bookDetail p:last-child {
-        font-size: 16px;
+    .reviewForm button,
+    .reviewitems button {
+        font-size: 14px;
     }
 }
 
+.starRating {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.star {
+    cursor: pointer;
+    font-size: 20px;
+    color: #d4d4d4;  /* Default unfilled star color */
+}
+
+.star.filled {
+    color: gold;  /* Filled star color */
+}
 
 /*-------BookCreation--------*/
 
