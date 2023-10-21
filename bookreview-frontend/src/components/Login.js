@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import '../style.css'
+import '../style.css';
 import { useNavigate } from 'react-router-dom';
 
-const Login = () => {
+const Login = ({ fetchUserProfile }) => {   // Added fetchUserProfile as a prop
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState(null);
 
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -20,7 +20,10 @@ const Login = () => {
             });
 
             localStorage.setItem('token', response.data.token); // The token is saved to local storage
-            navigate('/user-profile')
+            
+            fetchUserProfile();  // Call fetchUserProfile function upon successful login
+
+            navigate('/user-profile');
         } catch (err) {
             setError("Invalid credentials. Please try again.");
         }

@@ -33,9 +33,6 @@ const UserProfile = () => {
 
     return (
         <div className='userProfile'>
-            <h2>Welcome, {user.username}!</h2>
-            <p>Email: {user.email}</p>
-
             <h3>Your Books:</h3>
             {userBooks.map(book => (
                 <div key={book.id}>

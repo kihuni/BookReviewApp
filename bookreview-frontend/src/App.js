@@ -1,18 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { Link } from 'react-router-dom'
 import BookList from './components/BookList';
 import BookDetail from './components/BookDetail';
 import BookCreation from './components/BookCreation';
 import BookEdit from './components/BookEdit';
-import About from './components/about'
-import './style.css'
+import About from './components/about';
+import './style.css';
 import Login from './components/Login';
 import UserProfile from './components/UserProfile';
 import Register from './components/Register';
+import NavBar from './components/NavBar'; // Import the NavBar component
+import axios from 'axios';
 
 function App() {
     const [menuActive, setMenuActive] = useState(false);
+    const [user, setUser] = useState(null);
 
     useEffect(() => {
         if (menuActive) {
@@ -22,33 +24,33 @@ function App() {
         }
     }, [menuActive]);
 
+    useEffect(() => {
+        async function fetchUserProfile() {
+            const token = localStorage.getItem('token');
+            if (token) {
+                const config = {
+                    headers: { Authorization: `Bearer ${token}` }
+                };
+                try {
+                    const response = await axios.get('http://localhost:8000/user-profile/', config);
+                    setUser(response.data);
+                } catch (error) {
+                    console.error("Error fetching user profile:", error);
+                }
+            }
+        }
+
+        fetchUserProfile();
+    }, []);
+
     return (
         <Router>
+            <NavBar user={user} setUser={setUser} />
             <div className='App'>
-                <div className='container'>
-                    <div className='header'>
-                        <nav>
-                            <Link className=' link home' to="/">BookStation</Link>
-
-                            {/* Hamburger Menu */}
-                            <div className="hamburger" onClick={() => setMenuActive(!menuActive)}>
-                                <div></div>
-                                <div></div>
-                                <div></div>
-                            </div>
-
-                            <ul>
-                                <Link className='link about' to="/about">About</Link>
-                                <Link className='link create' to="/register">Create Account</Link>
-                                <Link className='link login' to="/login">Login</Link>
-                            </ul>
-                        </nav>
-                    </div>
-                </div>
                 <main>
                     <Routes>
-                        <Route path="/" exact element={<BookList />} />
-                        <Route path="/create" element={<BookCreation />} />
+                        <Route path="/" exact element={<BookList user={user} />} />
+                        <Route path="/create" element={<BookCreation user={user} />} />
                         <Route path="/books/edit/:id" element={<BookEdit />} />
                         <Route path="/books/:id" element={<BookDetail />} />
                         <Route path="/about" element={<About />} />

@@ -28,7 +28,7 @@ const BookDetail = () => {
 
     const handleReviewAdded = (newReview) => {
         if (newReview) {
-            setReviews(prevReviews => [newReview, ...prevReviews]);  // Add the new review to the list.
+            setReviews(prevReviews => [newReview, ...prevReviews]);  
         }
     };
 
