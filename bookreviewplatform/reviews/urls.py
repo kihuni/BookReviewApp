@@ -4,7 +4,7 @@ from .views import BookViewSet, ReviewViewSet, VoteViewSet,UserViewSet
 
 router = DefaultRouter()
 router.register(r'books', BookViewSet)
-router.register(r'reviews', ReviewViewSet)
+router.register(r'books/(?P<book_pk>\d+)/reviews', ReviewViewSet, basename='book-reviews')
 router.register(r'votes', VoteViewSet)
 
 urlpatterns = [

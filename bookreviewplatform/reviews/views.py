@@ -80,13 +80,17 @@ class UserViewSet(viewsets.GenericViewSet):
         serializer = BookSerializer(user_books, many=True)
         return Response(serializer.data)
 
+
 class ReviewViewSet(viewsets.ModelViewSet):
-    queryset = Review.objects.all()
     serializer_class = ReviewSerializer
     permission_classes = [IsAuthenticated]
 
+    def get_queryset(self):
+        if "book_pk" in self.kwargs:
+            return Review.objects.filter(book__id=self.kwargs["book_pk"])
+        return Review.objects.all()
+
     def perform_create(self, serializer):
-        
         book_id = self.request.data.get('book')
         book_instance = Book.objects.get(id=book_id)
         serializer.save(user=self.request.user, book=book_instance)

@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./bookreviewplatform/
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./bookreviewplatform/:/code/
+    ports:
+      - "8000:8000"
+    environment:
+      - DJANGO_DEBUG=True
+      - DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1
+    env_file:
+      - .env
+    depends_on:
+      - db
+  db:
+    image: postgres
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: db
+  frontend:
+    build: ./bookreview-frontend/
+    volumes:
+      - ./bookreview-frontend/:/app/
+    ports:
+      - "3000:3000"
+    environment:
+      REACT_APP_BACKEND_URL: http://backend:8000
