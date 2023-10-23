@@ -12,5 +12,8 @@ WORKDIR /code
 COPY requirements.txt /code/
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
+# Explicitly install psycopg2
+RUN pip install psycopg2-binary==2.9.1
+
 # Copy the current directory contents into the container at /code
 COPY . /code/
