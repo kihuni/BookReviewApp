@@ -11,6 +11,8 @@ WORKDIR /code
 # Install dependencies
 COPY requirements.txt /code/
 RUN pip install --upgrade pip && pip install -r requirements.txt
+RUN apt-get update && apt-get install -y netcat
+
 
 # Explicitly install psycopg2
 RUN pip install psycopg2-binary==2.9.1
