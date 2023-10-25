@@ -23,7 +23,7 @@ const BookCreation = ( {user} ) => {
         formData.append('cover_image', coverImage)
 
         try {
-            await axios.post('https://bookreviewapp.onrender.com/books/', formData, {
+            await axios.post('kihuni.pythonanywhere.com/books/', formData, {
     
                 headers: {
                     Authorization: `Bearer ${token}`,

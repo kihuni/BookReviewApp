@@ -9,7 +9,7 @@ const BookList = ({ user }) => {
     useEffect(() => {
         async function fetchBooks() {
             try {
-                const response = await axios.get('http://127.0.0.1:8000/books');
+                const response = await axios.get('kihuni.pythonanywhere.com/books');
                 setBooks(response.data);
             } catch (error) {
                 console.error("Error fetching books:", error);

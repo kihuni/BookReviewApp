@@ -24,9 +24,9 @@ function BookEdit() {
         // Fetch the current data of the book
         async function fetchBook() {
             try {
-                const response = await axios.get(`https://bookreviewapp.onrender.com/${id}/`, config);
+                const response = await axios.get(`kihuni.pythonanywhere.com/${id}/`, config);
                 setBook(response.data);
-                setCoverImageUrl(`http://127.0.0.1:8000${response.data.cover_image}`);
+                setCoverImageUrl(`kihuni.pythonanywhere.com${response.data.cover_image}`);
             } catch (error) {
                 console.error("Error fetching book data:", error);
             }
@@ -59,7 +59,7 @@ function BookEdit() {
         }
        
         try {
-            await axios.put(`https://bookreviewapp.onrender.com/books/${id}/`, formData, config);
+            await axios.put(`kihuni.pythonanywhere.com/books/${id}/`, formData, config);
             // Redirect to the book details page
             navigate(`/books/${id}`)
         } catch (error) {

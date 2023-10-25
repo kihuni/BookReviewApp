@@ -15,10 +15,10 @@ const UserProfile = () => {
             };
 
             try {
-                const userResponse = await axios.get('https://bookreviewapp.onrender.com/user-profile/', config);
+                const userResponse = await axios.get('kihuni.pythonanywhere.com/user-profile/', config);
                 setUser(userResponse.data);
 
-                const booksResponse = await axios.get('https://bookreviewapp.onrender.com/user-books/', config);
+                const booksResponse = await axios.get('kihuni.pythonanywhere.com/user-books/', config);
                 setUserBooks(booksResponse.data);
                 
             } catch (error) {
