@@ -1,10 +1,10 @@
-import React, { useState } from 'react'; // Ensure to import useState
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
 const NavBar = ({ user, setUser }) => {
     const navigate = useNavigate();
-    const [menuActive, setMenuActive] = useState(false); // Add this line here
+    const [menuActive, setMenuActive] = useState(false);
 
     const handleLogout = () => {
         localStorage.removeItem('token');
