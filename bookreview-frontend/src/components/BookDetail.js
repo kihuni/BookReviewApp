@@ -13,10 +13,10 @@ const BookDetail = () => {
     useEffect(() => {
         async function fetchBookAndReviews() {
             try {
-                const bookResponse = await axios.get(`http://localhost:8000/books/${id}`);
+                const bookResponse = await axios.get(`https://bookreviewapp.onrender.com/${id}`);
                 setBook(bookResponse.data);
 
-                const reviewResponse = await axios.get(`http://localhost:8000/books/${id}/reviews/`);
+                const reviewResponse = await axios.get(`https://bookreviewapp.onrender.com/${id}/reviews/`);
                 setReviews(reviewResponse.data);
             } catch (error) {
                 console.error("Error fetching book details:", error);

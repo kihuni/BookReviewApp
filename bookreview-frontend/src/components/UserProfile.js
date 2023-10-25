@@ -5,7 +5,7 @@ import '../style.css'
 
 const UserProfile = () => {
     const [user, setUser] = useState(null);
-    const [userBooks, setUserBooks] = useState([]); // To store the books
+    const [userBooks, setUserBooks] = useState([]); 
 
     useEffect(() => {
         async function fetchUserAndBooks() {
@@ -15,10 +15,10 @@ const UserProfile = () => {
             };
 
             try {
-                const userResponse = await axios.get('http://localhost:8000/user-profile/', config);
+                const userResponse = await axios.get('https://bookreviewapp.onrender.com/user-profile/', config);
                 setUser(userResponse.data);
 
-                const booksResponse = await axios.get('http://localhost:8000/user-books/', config);
+                const booksResponse = await axios.get('https://bookreviewapp.onrender.com/user-books/', config);
                 setUserBooks(booksResponse.data);
                 
             } catch (error) {

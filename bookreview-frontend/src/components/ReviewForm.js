@@ -21,10 +21,10 @@ function ReviewForm({ bookId, onReviewAdded }) {
             rating: parseInt(rating),
         };
 
-        onReviewAdded(newReview);  // Optimistically add the review.
+        onReviewAdded(newReview); 
 
         try {
-            const response = await axios.post(`http://localhost:8000/books/${bookId}/reviews/`, newReview, {
+            const response = await axios.post(`https://bookreviewapp.onrender.com/books/${bookId}/reviews/`, newReview, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -34,12 +34,12 @@ function ReviewForm({ bookId, onReviewAdded }) {
                 setContent('');
                 setRating(1);
             } else {
-                onReviewAdded(null);  // If not 201, remove the optimistic update.
+                onReviewAdded(null);  
                 setError('An error occurred. Please try again.');
             }
 
         } catch (error) {
-            onReviewAdded(null);  // On error, remove the optimistic update.
+            onReviewAdded(null);  
             setError('An error occurred. Please try again.');
         }
     }

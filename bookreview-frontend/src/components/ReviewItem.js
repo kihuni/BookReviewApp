@@ -6,7 +6,7 @@ function ReviewItem({ review, onVote }) {
         const token = localStorage.getItem('token');
 
         try {
-            const response = await axios.post(`http://localhost:8000/reviews/${review.id}/vote/`, {
+            const response = await axios.post(`https://bookreviewapp.onrender.com/reviews/${review.id}/vote/`, {
                 value: voteType
             }, {
                 headers: {

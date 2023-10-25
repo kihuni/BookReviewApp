@@ -24,7 +24,7 @@ function BookEdit() {
         // Fetch the current data of the book
         async function fetchBook() {
             try {
-                const response = await axios.get(`http://127.0.0.1:8000/books/${id}/`, config);
+                const response = await axios.get(`https://bookreviewapp.onrender.com/${id}/`, config);
                 setBook(response.data);
                 setCoverImageUrl(`http://127.0.0.1:8000${response.data.cover_image}`);
             } catch (error) {
@@ -59,7 +59,7 @@ function BookEdit() {
         }
        
         try {
-            await axios.put(`http://127.0.0.1:8000/books/${id}/`, formData, config);
+            await axios.put(`https://bookreviewapp.onrender.com/books/${id}/`, formData, config);
             // Redirect to the book details page
             navigate(`/books/${id}`)
         } catch (error) {
