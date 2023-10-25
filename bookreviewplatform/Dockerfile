@@ -1,5 +1,5 @@
 # Use an official Python runtime as a parent image
-FROM python:3.9-buster
+FROM python:3.8
 
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -10,8 +10,9 @@ WORKDIR /code
 
 # Install dependencies
 COPY requirements.txt /code/
-RUN pip install --upgrade pip
-RUN pip install --upgrade pip && pip install -r requirements.txt
+RUN pip install --upgrade pip && \
+    pip install -r requirements.txt
+
 
 
 # Explicitly install psycopg2
