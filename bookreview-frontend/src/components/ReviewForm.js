@@ -24,7 +24,7 @@ function ReviewForm({ bookId, onReviewAdded }) {
         onReviewAdded(newReview); 
 
         try {
-            const response = await axios.post(`kihuni.pythonanywhere.com/books/${bookId}/reviews/`, newReview, {
+            const response = await axios.post(`https://bookreviewapp.onrender.com/books/${bookId}/reviews/`, newReview, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }

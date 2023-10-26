@@ -51,7 +51,7 @@ function Register() {
 
         const { confirmedPassword, ...submitData } = formData;
         try {
-            const response = await axios.post('kihuni.pythonanywhere.com/register/', submitData);
+            const response = await axios.post('https://bookreviewapp.onrender.com/register/', submitData);
             setMessage('Registration successful!');
             navigate('/login')
         } catch (error) {

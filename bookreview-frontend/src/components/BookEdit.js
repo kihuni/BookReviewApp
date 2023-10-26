@@ -24,9 +24,9 @@ function BookEdit() {
         // Fetch the current data of the book
         async function fetchBook() {
             try {
-                const response = await axios.get(`kihuni.pythonanywhere.com/${id}/`, config);
+                const response = await axios.get(`https://bookreviewapp.onrender.com/${id}/`, config);
                 setBook(response.data);
-                setCoverImageUrl(`kihuni.pythonanywhere.com${response.data.cover_image}`);
+                setCoverImageUrl(`https://bookreviewapp.onrender.com${response.data.cover_image}`);
             } catch (error) {
                 console.error("Error fetching book data:", error);
             }

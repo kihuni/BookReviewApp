@@ -14,7 +14,7 @@ const Login = ({ fetchUserProfile, setUser }) => {
         e.preventDefault();
 
         try {
-            const response = await axios.post('kihuni.pythonanywhere.com/login/', {
+            const response = await axios.post('https://bookreviewapp.onrender.com/login/', {
                 username,
                 password
             });
