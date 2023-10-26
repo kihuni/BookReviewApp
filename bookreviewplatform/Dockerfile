@@ -16,3 +16,8 @@ RUN pip install -r requirements.txt
 
 # Copy the current directory contents into the container at /code
 COPY . /code/
+
+# Expose port 8000 for the app
+EXPOSE 8000
+
+CMD ["gunicorn", "bookreviewplatform.wsgi:application", "--bind", "0.0.0.0:8000"]
