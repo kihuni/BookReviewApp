@@ -16,6 +16,7 @@ RUN pip install -r requirements.txt
 
 # Copy the current directory contents into the container at /code
 COPY . /code/
+COPY start.sh /code/start.sh
 
 # Expose port 8000 for the app
 EXPOSE 8000
