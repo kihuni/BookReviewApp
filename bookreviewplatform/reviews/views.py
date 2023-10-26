@@ -42,6 +42,7 @@ class VoteViewSet(viewsets.ModelViewSet):
     
 class UserViewSet(viewsets.GenericViewSet):
     queryset = User.objects.all()
+    serializer_class = UserSerializers
     
     def get_permissions(self):
         if self.action == 'register' or self.action == 'login':
