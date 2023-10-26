@@ -2,7 +2,6 @@
 
 from pathlib import Path
 import os
-from datetime import timedelta
 #import environ
 
 
@@ -42,8 +41,6 @@ SIMPLE_JWT = {
     'USER_ID_CLAIM': 'user_id',
     'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
     'TOKEN_TYPE_CLAIM': 'token_type',
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=20),   # Token expiration set to 20 minutes
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),      # Refresh token lifetime
 }
 
 INSTALLED_APPS = [
