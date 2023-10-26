@@ -23,7 +23,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 #DEBUG = env.bool('DJANGO_DEBUG', default=True)
 #ALLOWED_HOSTS = env.list('DJANGO_ALLOWED_HOSTS', default=['localhost', '127.0.0.1', 'your-subdomain.onrender.com'])
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-dzdzz3%%krny(o+w-&&sr963zeekc(s9cyo1c+jr$9n7%%sh%%kd4g')
-DEBUG = os.environ.get('DJANGO_DEBUG', 'True') 
+DEBUG = os.environ.get('DJANGO_DEBUG', 'True') == 'True' 
 ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
 
 
@@ -96,7 +96,7 @@ DATABASES = {
         'USER': os.environ.get('POSTGRES_USER', 'default_user'),
         'PASSWORD': os.environ.get('POSTGRES_PASSWORD', 'default_password'),
         'HOST': os.environ.get('POSTGRES_HOST', 'db'),
-        'PORT': os.environ.get('POSTGRES_PORT', 5432),
+        'PORT': int(os.environ.get('POSTGRES_PORT', 5432)),
     }
 }
 
@@ -120,5 +120,5 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
