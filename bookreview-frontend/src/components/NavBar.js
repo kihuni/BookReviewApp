@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import 'font-awesome/css/font-awesome.min.css';
 
-const NavBar = ({ user, setUser }) => {
+
+const NavBar = ({ user, setUser, theme, setTheme }) => {
     const navigate = useNavigate();
     const [menuActive, setMenuActive] = useState(false);
 
@@ -17,15 +19,15 @@ const NavBar = ({ user, setUser }) => {
             <div className='header'>
                 <nav>
                     <Link className='link home' to="/">BookStation</Link>
-
+                    
                     {/* Hamburger Menu */}
-                    <div className="hamburger" onClick={() => setMenuActive(prevState => !prevState)}>
+                    <div className="hamburger" onClick={() => setMenuActive(prevState => !prevState) }>
                         <div></div>
                         <div></div>
                         <div></div>
                     </div>
 
-                    <ul>
+                    <ul className={menuActive ? 'active' : ''}>
                         <Link className='link about' to="/about">About</Link>
                         {user ? (
                             <>
@@ -41,6 +43,12 @@ const NavBar = ({ user, setUser }) => {
                         )}
                     </ul>
                 </nav>
+                <button className="theme-toggle" onClick={() => setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light')}>
+                     {theme === 'light' ? 
+                         <i className="fa fa-moon-o" aria-hidden="true"></i> :
+                        <i className="fa fa-sun-o" aria-hidden="true"></i>
+                      }
+                </button>
             </div>
         </div>
     );

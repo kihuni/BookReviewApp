@@ -15,14 +15,16 @@ import axios from 'axios';
 function App() {
     const [menuActive, setMenuActive] = useState(false);
     const [user, setUser] = useState(null);
+    const [theme, setTheme] = useState('light');
 
     useEffect(() => {
+        document.body.dataset.theme = theme;
         if (menuActive) {
             document.body.classList.add("menu-active");
         } else {
             document.body.classList.remove("menu-active");
         }
-    }, [menuActive]);
+    }, [menuActive, theme]);
 
     const fetchUserProfile = async () => {
         const token = localStorage.getItem('token');
@@ -45,7 +47,7 @@ function App() {
 
     return (
         <Router>
-            <NavBar user={user} setUser={setUser} />
+            <NavBar user={user} setTheme={setTheme} theme={theme} setUser={setUser} />
             <div className='App'>
                 <main>
                     <Routes>
