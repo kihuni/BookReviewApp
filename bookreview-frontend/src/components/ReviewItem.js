@@ -26,18 +26,13 @@ function ReviewItem({ review, onVote }) {
     }
 
     return (
-        <div className="reviewitems">
-        <p>{review.content}</p>
-        <div className="starRating">
-            {[1, 2, 3, 4, 5].map(num => (
-                <span key={num} className={`star ${num <= review.rating ? 'filled' : ''}`}>
-                    ★
-                </span>
-            ))}
+        <div>
+            <p>{review.content}</p>
+            <p>Rating: {review.rating}</p>
+            <button onClick={() => handleVote(1)}>Upvote</button>
+            <button onClick={() => handleVote(-1)}>Downvote</button>
         </div>
-        ...
-    </div>
-);
+    );
 }
 
 export default ReviewItem;

@@ -22,7 +22,11 @@ const NavBar = ({ user, setUser, theme, setTheme }) => {
                     
 
                     {/* Hamburger Menu */}
-                    <div className="hamburger" onClick={() => setMenuActive(prevState => !prevState) }>
+                    <div className="hamburger" onClick={() => {
+                        setMenuActive(prevState => !prevState)
+                        console.log(menuActive);
+
+                    } }>
                         <div></div>
                         <div></div>
                         <div></div>
