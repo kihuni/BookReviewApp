@@ -20,6 +20,7 @@ const NavBar = ({ user, setUser, theme, setTheme }) => {
                 <nav>
                     <Link className='link home' to="/">BookStation</Link>
                     
+
                     {/* Hamburger Menu */}
                     <div className="hamburger" onClick={() => setMenuActive(prevState => !prevState) }>
                         <div></div>
@@ -41,14 +42,15 @@ const NavBar = ({ user, setUser, theme, setTheme }) => {
                                 <Link className='link login' to="/login">Login</Link>
                             </>
                         )}
+
+                        <button className="theme-toggle" onClick={() => setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light')}>
+                            {theme === 'light' ? 
+                                <i className="fa fa-moon-o" aria-hidden="true"></i> :
+                                <i className="fa fa-sun-o" aria-hidden="true"></i>
+                            }
+                         </button>
                     </ul>
                 </nav>
-                <button className="theme-toggle" onClick={() => setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light')}>
-                     {theme === 'light' ? 
-                         <i className="fa fa-moon-o" aria-hidden="true"></i> :
-                        <i className="fa fa-sun-o" aria-hidden="true"></i>
-                      }
-                </button>
             </div>
         </div>
     );

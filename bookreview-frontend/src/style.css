@@ -1,24 +1,50 @@
-
-[data-theme='light']{
-    /* Light theme */
-    --primary-bg-color: #f7f9fc;
-    --secondary-bg-color: #ffffff;
-    --primary-text-color: #181a1b;
-    --secondary-text-color: #262626;
-    --link-color: #f1dfe5;
-    --hover-color: #c098a4;
-    --container-bg: #262626;
+[data-theme='light'] {
+    --primary-bg-color: #ffffff;       
+    --secondary-bg-color: #f7f7f7;     
+    --primary-text-color: #333;        
+    --secondary-text-color: #555;     
+    --link-color: #007BFF;            
+    --hover-color: #0056b3;           
+    --container-bg: #f7f7f7;         
 }
 
 [data-theme='dark'] {
-    /* Dark theme */
-    --primary-bg-color: #181a1b;
-    --secondary-bg-color: #262626;
-    --primary-text-color: #f7f9fc;
-    --secondary-text-color: #f1dfe5;
-    --link-color: #262626;
-    --hover-color: #555;
-    --container-bg: #f1dfe5;
+    --primary-bg-color: #1a1a1a;       
+    --secondary-bg-color: #2e2e2e;    
+    --primary-text-color: #f7f9fc;    
+    --secondary-text-color: #c2c2c2;   
+    --link-color: #00BFFF;            
+    --hover-color: #0091ca;            
+    --container-bg: #2e2e2e;          
+}
+
+body {
+    background-color: var(--primary-bg-color);
+    color: var(--primary-text-color);
+    font-family: Arial, sans-serif;
+    transition: background-color 0.3s, color 0.3s;
+}
+a {
+    text-decoration: none;
+    color: var(--link-color);
+}
+
+a:hover {
+    color: var(--hover-color);
+}
+
+button {
+    border: none;
+    cursor: pointer;
+    background-color: var(--link-color);
+    color: var(--primary-text-color);
+    padding: 8px 16px;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: var(--hover-color);
 }
 
 button i.fa {
@@ -53,9 +79,11 @@ button i.fa {
     justify-content: space-between;
 }
 .theme-toggle {
-    display: block;
+    border: none;
+    background: none;
     margin-top: 10px;
     align-self: flex-end;
+    margin-left: 10px;
 }
 
 
@@ -122,9 +150,15 @@ nav {
 
     .theme-toggle {
         display: block;
-        margin-top: 10px;
-        align-self: flex-end;
+        margin: 0.5rem 1rem;
+        background-color: var(--primary-bg-color);
+        border: none;
     }
+
+    .theme-toggle i.fa {
+        color: var(--primary-text-color);
+    }
+
     .hamburger {
         display: flex;
         margin-right: 30px;
@@ -136,7 +170,7 @@ nav {
         position: absolute;
         top: 60px; 
         right: 1rem;
-        background-color: #dd6969;
+        background-color: var(--secondary-bg-color);
         border-radius: 8px;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         z-index: 1000;
@@ -145,7 +179,6 @@ nav {
     nav ul.active {
         display: flex !important;
     }
-    
 
     .link {
         display: block;
@@ -155,13 +188,12 @@ nav {
 
 
 
-
 /*-------BookList--------*/
 
 .ListHeader {
     text-align: center;
-    background-color: var(--primary-bg-color); 
-    border-bottom: 1px solid #dfe2e6; 
+    background-color: var(--primary-bg-color);
+    border-bottom: 1px solid var(--secondary-bg-color);
 }
 
 .ListHeader div {
@@ -173,17 +205,17 @@ nav {
 
 .ListHeader div h2 {
     font-size: 48px;
-    color: #2d3748; 
+    color: var(--primary-text-color); 
 }
 
 .ListHeader div p {
     font-size: 24px;
-    color: #4a5568; 
+    color: var(--secondary-text-color); 
 }
 
 .ListHeader div h2 span,
 .ListHeader div p span {
-    color: #e53e3e; 
+    color: var(--link-color); 
 }
 
 .headerList {
@@ -191,14 +223,14 @@ nav {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     grid-gap: 40px;
-    background-color: #ffffff; 
+    background-color: var(--secondary-bg-color); 
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.05); 
 }
 
 .headerList .containerList {
-    background: #f7f9fc; 
+    background: var(--container-bg); 
     padding: 20px;
     font-size: 13px;
     font-weight: 400;
@@ -207,7 +239,7 @@ nav {
 }
 
 .headerList .containerList h2 span {
-    color: #e53e3e;
+    color: var(--link-color);
     font-size: 22px;
 }
 
@@ -215,21 +247,22 @@ nav {
     font-size: 20px;
     font-weight: 500;
     margin-bottom: 12px;
+    color: var(--primary-text-color);
 }
 
 .headerList .containerList h2 > Link,
 .headerList .containerList h2 a {
     text-decoration: none;
-    color: #2d3748;
+    color: var(--primary-text-color);
 }
 
 .headerList .containerList p span {
-    color: #4a5568;
+    color: var(--secondary-text-color);
     font-size: 14px;
 }
 
 .headerList .containerList:hover {
-    background: #e2e8f0; 
+    background: var(--hover-color); 
     transform: translateY(-5px); 
 }
 
@@ -248,10 +281,12 @@ nav {
 
     .ListHeader div h2 {
         font-size: 28px;
+        color: var(--primary-text-color);
     }
 
     .ListHeader div p {
         font-size: 18px;
+        color: var(--secondary-text-color);
     }
 
     .headerList {
@@ -266,34 +301,36 @@ nav {
  
 
 /*-------About--------*/
+
 .about-container {
     max-width: 800px;
     margin: 50px auto; 
     padding: 20px;
     border-radius: 10px;
-    background-color: #f9f9f9; 
+    background-color: var(--secondary-bg-color); 
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); 
 }
 
 .about-container h2 {
     font-size: 28px;
     margin-bottom: 20px;
-    color: #333; 
+    color: var(--primary-text-color); 
 }
 
 .about-container p {
     font-size: 18px;
     line-height: 1.5;
-    color: #555; 
+    color: var(--secondary-text-color); 
     margin-bottom: 20px;
 }
 
 .about-container .developed {
     font-style: italic;
-    color: #777;
+    color: var(--tertiary-text-color);
 }
 
 /* Mobile Styles */
+
 @media only screen and (max-width: 768px) {
     .about-container {
         margin: 20px 10px;
@@ -302,35 +339,80 @@ nav {
 
     .about-container h2 {
         font-size: 24px;
+        color: var(--primary-text-color);
     }
 
     .about-container p {
         font-size: 16px; 
+        color: var(--secondary-text-color);
     }
 }
 
 
+
 /*------Login------*/
 
-.headerLogin{
+.headerLogin {
     padding: 5% 30%;
-}
-h2{
-    font-size: 30px;
+    background-color: var(--secondary-bg-color); 
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); 
 }
 
-.headerLogin form input{
+.headerLogin h2 {
+    font-size: 30px;
+    color: var(--primary-text-color);
+    margin-bottom: 20px; 
+}
+
+.headerLogin p {
+    font-size: 18px;
+    color: #e53e3e;
+    margin: 10px 0;
+}
+
+.headerLogin form input {
     display: block;
     margin-top: 30px;
-    font-size: 30px;
+    font-size: 18px;
+    color: var(--primary-text-color);
+    background-color: var(--input-bg-color);
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
 }
-.headerLogin form button{
+
+.headerLogin form button {
     margin-top: 30px;
-    padding: 3% 5%;
+    padding: 10px 20px;
     font-size: 20px;
     font-weight: bold;
-    color: #262626;
+    color: var(--primary-button-text);
+    background-color: var(--primary-button-bg);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
 }
+
+.headerLogin form button:hover {
+    background-color: var(--primary-button-hover-bg);
+}
+
+/* Mobile Responsiveness */
+
+@media only screen and (max-width: 768px) {
+    .headerLogin {
+        padding: 5% 10%;
+    }
+
+    .headerLogin form input,
+    .headerLogin h2 {
+        font-size: 16px;
+    }
+}
+
 
 /*------Register--------*/
 .headerLogin {
@@ -408,51 +490,51 @@ h2{
     margin: 40px auto; 
     padding: 20px;
     border-radius: 10px;
-    background-color: #f9f9f9; 
+    background-color: var(--secondary-bg-color); 
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); 
+}
+
+.userProfile h2, .userProfile h3, .userProfile h4 {
+    border-bottom: 1px solid var(--border-color); 
+    color: var(--primary-text-color);
 }
 
 .userProfile h2 {
     font-size: 28px;
-    color: #333;
-    border-bottom: 1px solid #ddd; 
     padding-bottom: 10px;
     margin-bottom: 20px;
 }
 
 .userProfile p {
     font-size: 18px;
-    color: #555;
+    color: var(--secondary-text-color);
     margin-bottom: 20px;
 }
 
 .userProfile h3 {
     font-size: 24px;
-    color: #444;
     margin-top: 30px;
 }
 
 .userProfile div {
     padding: 10px 0; 
-    border-bottom: 1px dashed #ccc; 
+    border-bottom: 1px dashed var(--border-color); 
     margin-bottom: 20px;
 }
 
 .userProfile div h4 {
     font-size: 20px;
-    color: #666;
 }
 
 .userProfile div p {
     font-size: 18px;
-    color: #777;
 }
 
 .userProfile a {
     display: inline-block; 
     padding: 10px 20px;
-    background-color: #262626;
-    color: white;
+    background-color: var(--primary-button-bg);
+    color: var(--primary-button-text);
     text-decoration: none;
     border-radius: 5px;
     margin-right: 10px;
@@ -460,7 +542,7 @@ h2{
 }
 
 .userProfile a:hover {
-    background-color: #555; 
+    background-color: var(--primary-button-hover-bg); 
 }
 
 /* Mobile Responsiveness */
@@ -500,15 +582,16 @@ h2{
     margin: 40px auto; 
     padding: 20px;
     border-radius: 10px;
-    background-color: #f9f9f9; 
+    background-color: var(--secondary-bg-color); 
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); 
 }
 
 .bookedit h2 {
     font-size: 28px;
-    color: #333;
+    color: var(--primary-text-color);
     margin-bottom: 30px; 
 }
+
 .bookedit form > div {
     margin-bottom: 20px;
 }
@@ -516,7 +599,7 @@ h2{
 .bookedit label {
     display: block; 
     font-size: 16px;
-    color: #555;
+    color: var(--secondary-text-color);
     margin-bottom: 10px;
 }
 
@@ -527,6 +610,8 @@ h2{
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 16px;
+    color: var(--primary-text-color);
+    background-color: var(--input-bg-color);
 }
 
 .bookedit textarea {
@@ -542,8 +627,8 @@ h2{
 }
 
 .bookedit button {
-    background-color: #262626;
-    color: white;
+    background-color: var(--primary-button-bg);
+    color: var(--primary-button-text);
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
@@ -552,7 +637,7 @@ h2{
 }
 
 .bookedit button:hover {
-    background-color: #555;
+    background-color: var(--primary-button-hover-bg);
 }
 
 /* Mobile Responsiveness */
@@ -568,6 +653,7 @@ h2{
     }
 }
 
+
 /* BookDetail Component Styling */
 
 .bookdetails {
@@ -575,27 +661,28 @@ h2{
     flex-direction: column;
     align-items: center;
     padding: 20px;
+    background-color: var(--secondary-bg-color); 
 }
 
 .bookCover {
-    max-width: 200px;   /* Adjust based on your preference */
-    height: auto;      /* Maintains the image aspect ratio */
+    max-width: 200px;   
+    height: auto;      
     border-radius: 10px;
-    box-shadow: 0px 0px 15px rgba(0,0,0,0.2);  /* Adds a light shadow to the image */
+    box-shadow: 0px 0px 15px rgba(0,0,0,0.2);  
     margin-bottom: 20px;
 }
 
 .bookdetails h2 {
     font-size: 24px;
     margin: 10px 0;
+    color: var(--primary-text-color);
 }
 
 .bookdetails p {
     font-size: 18px;
-    color: #777;
+    color: var(--secondary-text-color);
     margin: 5px 0;
 }
-
 
 /* Mobile Responsiveness */
 
@@ -614,13 +701,14 @@ h2{
     }
 }
 
-/* ReviewForm Component Styling */
+/*-------ReviewForm--------*/
 
 .reviewForm {
     margin: 20px 0;
-    background-color: #f4f4f4;
+    background-color: var(--secondary-bg-color);
     padding: 20px;
-    border-radius: 8px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); 
 }
 
 .reviewForm form {
@@ -633,59 +721,85 @@ h2{
     resize: vertical;
     padding: 10px;
     font-size: 16px;
-    width: 100%;
+    color: var(--primary-text-color);
+    background-color: var(--input-bg-color);
     border: 1px solid #ccc;
     border-radius: 5px;
 }
 
-.reviewForm select {
-    width: 80px;
-    padding: 5px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+.reviewForm .starRating {
+    display: flex;
+    gap: 5px;
+}
+
+.reviewForm .star {
+    cursor: pointer;
+    color: #ccc;
+    font-size: 24px;
+    transition: color 0.3s;
+}
+
+.reviewForm .star.filled {
+    color: #e53e3e;
 }
 
 .reviewForm button {
-    padding: 10px 15px;
+    padding: 10px 20px;
     font-size: 16px;
     cursor: pointer;
-    background-color: #007BFF;
-    color: #ffffff;
+    background-color: var(--primary-button-bg);
+    color: var(--primary-button-text);
     border: none;
     border-radius: 5px;
     transition: background-color 0.3s;
 }
 
 .reviewForm button:hover {
-    background-color: #0056b3;
+    background-color: var(--primary-button-hover-bg);
 }
 
 .reviewForm p {
-    color: red;
     font-size: 16px;
+    color: #e53e3e; 
+    margin-top: 20px;
 }
 
-/* ReviewItem Component Styling */
+/* Mobile Responsiveness */
+
+@media only screen and (max-width: 768px) {
+    .reviewForm {
+        padding: 15px;
+    }
+
+    .reviewForm textarea,
+    .reviewForm .star {
+        font-size: 14px;
+    }
+}
+
+
+/*-------ReviewItem--------*/
 
 .reviewitems {
     margin: 20px 0;
     padding: 20px;
     border: 1px solid #ccc;
-    border-radius: 8px;
-    background-color: #fff;
+    border-radius: 10px;
+    background-color: var(--secondary-bg-color);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); 
 }
 
 .reviewitems p {
     margin-bottom: 10px;
+    color: var(--primary-text-color);
 }
 
 .reviewitems button {
     padding: 5px 10px;
     margin-right: 10px;
     cursor: pointer;
-    background-color: #007BFF;
-    color: #ffffff;
+    background-color: var(--primary-button-bg);
+    color: var(--primary-button-text);
     border: none;
     border-radius: 5px;
     transition: background-color 0.3s;
@@ -696,20 +810,7 @@ h2{
 }
 
 .reviewitems button:hover {
-    background-color: #0056b3;
-}
-
-/* Mobile Responsiveness */
-
-@media only screen and (max-width: 768px) {
-    .reviewForm textarea {
-        font-size: 14px;
-    }
-
-    .reviewForm button,
-    .reviewitems button {
-        font-size: 14px;
-    }
+    background-color: var(--primary-button-hover-bg);
 }
 
 .starRating {
@@ -721,11 +822,24 @@ h2{
 .star {
     cursor: pointer;
     font-size: 20px;
-    color: #d4d4d4;  /* Default unfilled star color */
+    color: #d4d4d4; 
 }
 
 .star.filled {
-    color: gold;  /* Filled star color */
+    color: #e53e3e;  
+}
+
+/* Mobile Responsiveness */
+
+@media only screen and (max-width: 768px) {
+    .reviewitems {
+        padding: 15px;
+    }
+
+    .reviewitems p,
+    .reviewitems button {
+        font-size: 14px;
+    }
 }
 
 /*-------BookCreation--------*/
@@ -734,9 +848,10 @@ h2{
     max-width: 600px; 
     margin: 40px auto; 
     border-radius: 10px;
-    background-color: #f9f9f9; 
+    background-color: var(--secondary-bg-color); 
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
 }
+
 .bookCreation form > div {
     margin-bottom: 20px; 
 }
@@ -744,7 +859,7 @@ h2{
 .bookCreation label {
     display: block; 
     font-size: 16px;
-    color: #555;
+    color: var(--secondary-text-color);
     margin-bottom: 10px;
 }
 
@@ -764,8 +879,8 @@ h2{
 }
 
 .bookCreation button {
-    background-color: #262626;
-    color: white;
+    background-color: var(--primary-bg-color);
+    color: var(--primary-text-color);
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
@@ -774,12 +889,12 @@ h2{
 }
 
 .bookCreation button:hover {
-    background-color: #555;
+    background-color: var(--hover-bg-color);
 }
 
 .bookCreation p {
     font-size: 18px;
-    color: #0a7f00; 
+    color: var(--success-color); 
     margin-top: 20px;
     font-weight: bold;
 }
