@@ -10,7 +10,7 @@ import Login from './components/Login';
 import UserProfile from './components/UserProfile';
 import Register from './components/Register';
 import NavBar from './components/NavBar'; 
-import axios from 'axios';
+import api from './components/api';
 
 function App() {
     const [menuActive, setMenuActive] = useState(false);
@@ -33,7 +33,7 @@ function App() {
                 headers: { Authorization: `Bearer ${token}` }
             };
             try {
-                const response = await axios.get('https://bookreviewapp.onrender.com/user-profile/', config);
+                const response = await api.get('https://bookreviewapp.onrender.com/user-profile/', config);
                 setUser(response.data);
             } catch (error) {
                 console.error("Error fetching user profile:", error);

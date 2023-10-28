@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import '../style.css'
+import api from './api';
 
 function Register() {
     const [formData, setFormData] = useState({
@@ -51,7 +51,7 @@ function Register() {
 
         const { confirmedPassword, ...submitData } = formData;
         try {
-            const response = await axios.post('https://bookreviewapp.onrender.com/register/', submitData);
+            const response = await api.post('https://bookreviewapp.onrender.com/register/', submitData);
             setMessage('Registration successful!');
             navigate('/login')
         } catch (error) {

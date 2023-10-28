@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
 import ReviewForm from './ReviewForm';
 import ReviewItem from './ReviewItem';
+import api from './api';
 
 const BookDetail = () => {
     const { id } = useParams();
@@ -13,10 +13,10 @@ const BookDetail = () => {
     useEffect(() => {
         async function fetchBookAndReviews() {
             try {
-                const bookResponse = await axios.get(`https://bookreviewapp.onrender.com/${id}`);
+                const bookResponse = await api.get(`https://bookreviewapp.onrender.com/${id}`);
                 setBook(bookResponse.data);
 
-                const reviewResponse = await axios.get(`https://bookreviewapp.onrender.com/${id}/reviews/`);
+                const reviewResponse = await api.get(`https://bookreviewapp.onrender.com/${id}/reviews/`);
                 setReviews(reviewResponse.data);
             } catch (error) {
                 console.error("Error fetching book details:", error);

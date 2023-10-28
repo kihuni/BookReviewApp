@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from './api';
 
 const BookCreation = ( {user} ) => {
     const [title, setTitle] = useState('');
@@ -23,7 +23,7 @@ const BookCreation = ( {user} ) => {
         formData.append('cover_image', coverImage)
 
         try {
-            await axios.post('https://bookreviewapp.onrender.com/', formData, {
+            await api.post('https://bookreviewapp.onrender.com/', formData, {
     
                 headers: {
                     Authorization: `Bearer ${token}`,

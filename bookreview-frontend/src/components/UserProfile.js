@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
 import '../style.css'
+import api from './api';
 
 const UserProfile = () => {
     const [user, setUser] = useState(null);
@@ -15,10 +15,10 @@ const UserProfile = () => {
             };
 
             try {
-                const userResponse = await axios.get('https://bookreviewapp.onrender.com/user-profile/', config);
+                const userResponse = await api.get('https://bookreviewapp.onrender.com/user-profile/', config);
                 setUser(userResponse.data);
 
-                const booksResponse = await axios.get('https://bookreviewapp.onrender.com/user-books/', config);
+                const booksResponse = await api.get('https://bookreviewapp.onrender.com/user-books/', config);
                 setUserBooks(booksResponse.data);
                 
             } catch (error) {

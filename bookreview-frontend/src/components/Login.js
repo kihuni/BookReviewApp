@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import '../style.css';
+import api from './api';
 import { useNavigate } from 'react-router-dom';
 
 const Login = ({ fetchUserProfile, setUser }) => {
@@ -14,7 +14,7 @@ const Login = ({ fetchUserProfile, setUser }) => {
         e.preventDefault();
 
         try {
-            const response = await axios.post('https://bookreviewapp.onrender.com/login/', {
+            const response = await api.post('https://bookreviewapp.onrender.com/login/', {
                 username,
                 password
             });

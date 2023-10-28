@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import axios from 'axios';
 import { Link } from 'react-router-dom';
 import '../style.css';
+import api from "./api";
 
 const BookList = ({ user }) => {
     const [books, setBooks] = useState([]);
@@ -9,7 +9,7 @@ const BookList = ({ user }) => {
     useEffect(() => {
         async function fetchBooks() {
             try {
-                const response = await axios.get('https://bookreviewapp.onrender.com/books');
+                const response = await api.get('https://bookreviewapp.onrender.com/books');
                 setBooks(response.data);
             } catch (error) {
                 console.error("Error fetching books:", error);

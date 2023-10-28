@@ -1,12 +1,12 @@
 import React from "react";
-import axios from 'axios';
+import api from "./api";
 
 function ReviewItem({ review, onVote }) {
     const handleVote = async (voteType) => {
         const token = localStorage.getItem('token');
 
         try {
-            const response = await axios.post(`https://bookreviewapp.onrender.com/reviews/${review.id}/vote/`, {
+            const response = await api.post(`https://bookreviewapp.onrender.com/reviews/${review.id}/vote/`, {
                 value: voteType
             }, {
                 headers: {

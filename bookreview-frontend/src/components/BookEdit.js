@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import '../style.css'
+import api from './api';
 
 function BookEdit() {
     const { id } = useParams();
@@ -24,7 +24,7 @@ function BookEdit() {
         // Fetch the current data of the book
         async function fetchBook() {
             try {
-                const response = await axios.get(`https://bookreviewapp.onrender.com/${id}/`, config);
+                const response = await api.get(`https://bookreviewapp.onrender.com/${id}/`, config);
                 setBook(response.data);
                 setCoverImageUrl(`https://bookreviewapp.onrender.com${response.data.cover_image}`);
             } catch (error) {
@@ -59,7 +59,7 @@ function BookEdit() {
         }
        
         try {
-            await axios.put(`kihuni.pythonanywhere.com/books/${id}/`, formData, config);
+            await api.put(`kihuni.pythonanywhere.com/books/${id}/`, formData, config);
             // Redirect to the book details page
             navigate(`/books/${id}`)
         } catch (error) {

@@ -2,6 +2,8 @@
 
 from pathlib import Path
 import os
+from datetime import timedelta
+
 #import environ
 
 
@@ -33,6 +35,7 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
+    'ROTATE_REFRESH_TOKENS': False,
     'ALGORITHM': 'HS256',
     'SIGNING_KEY': SECRET_KEY,
     'VERIFYING_KEY': None,
@@ -41,6 +44,11 @@ SIMPLE_JWT = {
     'USER_ID_CLAIM': 'user_id',
     'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
     'TOKEN_TYPE_CLAIM': 'token_type',
+    'VALIDATED_TOKEN': True,
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=480), 
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
+    'ROTATE_REFRESH_TOKENS': False,
 }
 
 INSTALLED_APPS = [
