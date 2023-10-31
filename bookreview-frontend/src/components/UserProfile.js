@@ -15,10 +15,10 @@ const UserProfile = () => {
             };
 
             try {
-                const userResponse = await api.get('https://bookreviewapp.onrender.com/user-profile/', config);
+                const userResponse = await api.get('/user-profile/', config);
                 setUser(userResponse.data);
 
-                const booksResponse = await api.get('https://bookreviewapp.onrender.com/user-books/', config);
+                const booksResponse = await api.get('/user-books/', config);
                 setUserBooks(booksResponse.data);
                 
             } catch (error) {

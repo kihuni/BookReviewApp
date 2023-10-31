@@ -33,7 +33,7 @@ function App() {
                 headers: { Authorization: `Bearer ${token}` }
             };
             try {
-                const response = await api.get('https://bookreviewapp.onrender.com/user-profile/', config);
+                const response = await api.get('/user-profile/', config);
                 setUser(response.data);
             } catch (error) {
                 console.error("Error fetching user profile:", error);

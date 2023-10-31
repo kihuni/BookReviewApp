@@ -655,20 +655,19 @@ nav {
 
 
 /* BookDetail Component Styling */
-
 .bookdetails {
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 20px;
-    background-color: var(--secondary-bg-color); 
+    background-color: var(--secondary-bg-color);
 }
 
 .bookCover {
-    max-width: 200px;   
-    height: auto;      
+    max-width: 200px;
+    height: auto;
     border-radius: 10px;
-    box-shadow: 0px 0px 15px rgba(0,0,0,0.2);  
+    box-shadow: 0px 0px 15px rgba(0,0,0,0.2);
     margin-bottom: 20px;
 }
 
@@ -685,10 +684,9 @@ nav {
 }
 
 /* Mobile Responsiveness */
-
 @media only screen and (max-width: 768px) {
     .bookdetails {
-        margin: 20px 10px; 
+        margin: 20px 10px;
         padding: 15px;
     }
 
@@ -700,6 +698,7 @@ nav {
         font-size: 16px;
     }
 }
+
 
 /*-------ReviewForm--------*/
 

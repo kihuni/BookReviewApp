@@ -51,7 +51,7 @@ function Register() {
 
         const { confirmedPassword, ...submitData } = formData;
         try {
-            const response = await api.post('https://bookreviewapp.onrender.com/register/', submitData);
+            const response = await api.post('/register/', submitData);
             setMessage('Registration successful!');
             navigate('/login')
         } catch (error) {

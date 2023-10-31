@@ -14,7 +14,7 @@ const Login = ({ fetchUserProfile, setUser }) => {
         e.preventDefault();
 
         try {
-            const response = await api.post('https://bookreviewapp.onrender.com/login/', {
+            const response = await api.post('/login/', {
                 username,
                 password
             });

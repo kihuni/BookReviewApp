@@ -6,7 +6,7 @@ function ReviewItem({ review, onVote }) {
         const token = localStorage.getItem('token');
 
         try {
-            const response = await api.post(`https://bookreviewapp.onrender.com/reviews/${review.id}/vote/`, {
+            const response = await api.post(`/reviews/${review.id}/vote/`, {
                 value: voteType
             }, {
                 headers: {

@@ -9,7 +9,7 @@ const BookList = ({ user }) => {
     useEffect(() => {
         async function fetchBooks() {
             try {
-                const response = await api.get('https://bookreviewapp.onrender.com/books');
+                const response = await api.get('/books/');
                 setBooks(response.data);
             } catch (error) {
                 console.error("Error fetching books:", error);

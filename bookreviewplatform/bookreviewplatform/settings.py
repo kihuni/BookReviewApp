@@ -5,8 +5,6 @@ import os
 from datetime import timedelta
 
 #import environ
-
-
 #env = environ.Env()
 #environ.Env.read_env()
 #print(os.environ)
@@ -26,9 +24,10 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 #ALLOWED_HOSTS = env.list('DJANGO_ALLOWED_HOSTS', default=['localhost', '127.0.0.1', 'your-subdomain.onrender.com'])
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-dzdzz3%%krny(o+w-&&sr963zeekc(s9cyo1c+jr$9n7%%sh%%kd4g')
 DEBUG = os.environ.get('DJANGO_DEBUG', 'True') == 'True' 
-ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
-
-
+ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1,0.0.0.0').split(',')
+#SECRET_KEY = 'django-insecure-dzdzz3%%krny(o+w-&&sr963zeekc(s9cyo1c+jr$9n7%%sh%%kd4g'
+#DEBUG = True
+#ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0', 'bookreviewapp.onrender.com']
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAuthenticated',),
     'DEFAULT_AUTHENTICATION_CLASSES': ('rest_framework_simplejwt.authentication.JWTAuthentication',),
@@ -115,6 +114,8 @@ DATABASES = {
         'PASSWORD': os.environ.get('POSTGRES_PASSWORD', 'default_password'),
         'HOST': os.environ.get('POSTGRES_HOST', 'db'),
         'PORT': int(os.environ.get('POSTGRES_PORT', 5432)),
+       #'ENGINE': 'django.db.backends.sqlite3',
+        #'NAME': BASE_DIR / "db.sqlite3",
     }
 }
 
@@ -140,6 +141,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
 
 from whitenoise.storage import CompressedManifestStaticFilesStorage
 

@@ -23,7 +23,7 @@ const BookCreation = ( {user} ) => {
         formData.append('cover_image', coverImage)
 
         try {
-            await api.post('https://bookreviewapp.onrender.com/', formData, {
+            await api.post('/books/', formData, {
     
                 headers: {
                     Authorization: `Bearer ${token}`,

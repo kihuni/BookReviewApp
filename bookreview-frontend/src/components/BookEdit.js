@@ -24,9 +24,9 @@ function BookEdit() {
         // Fetch the current data of the book
         async function fetchBook() {
             try {
-                const response = await api.get(`https://bookreviewapp.onrender.com/${id}/`, config);
+                const response = await api.get(`/books/${id}/`, config);
                 setBook(response.data);
-                setCoverImageUrl(`https://bookreviewapp.onrender.com${response.data.cover_image}`);
+                setCoverImageUrl(`${response.data.cover_image}`);
             } catch (error) {
                 console.error("Error fetching book data:", error);
             }
@@ -59,7 +59,7 @@ function BookEdit() {
         }
        
         try {
-            await api.put(`kihuni.pythonanywhere.com/books/${id}/`, formData, config);
+            await api.put(`/books/${id}/`, formData, config);
             // Redirect to the book details page
             navigate(`/books/${id}`)
         } catch (error) {

@@ -23,7 +23,7 @@ function ReviewForm({ bookId, onReviewAdded }) {
         onReviewAdded(newReview); 
 
         try {
-            const response = await api.post(`https://bookreviewapp.onrender.com/books/${bookId}/reviews/`, newReview, {
+            const response = await api.post(`/books/${bookId}/reviews/`, newReview, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
