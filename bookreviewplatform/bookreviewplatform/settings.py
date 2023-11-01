@@ -3,16 +3,29 @@
 from pathlib import Path
 import os
 from datetime import timedelta
-
+from storages.backends.azure_storage import AzureStorage
 #import environ
 #env = environ.Env()
 #environ.Env.read_env()
 #print(os.environ)
 
+# Azure Blob Storage settings
+
+ZURE_ACCOUNT_NAME = 'mediakihuni2'
+AZURE_ACCOUNT_KEY = 'PKoNAe1asSqsQLooipWPefZxZIx7Qq8A5XSpA4NZT1GAz57nwGAfCrZbbHa2c3SeDUPgh0R0vzbP+AStnUwRUQ=='
+AZURE_CONTAINER = 'mediakihuni2'
+
+DEFAULT_FILE_STORAGE = 'bookreviewplatform.azure.AzureMediaStorage'
+
+
+class AzureMediaStorage(AzureStorage):
+    location = 'media'
 #SECRET_KEY = 'django-insecure-dzdzz3%%krny(o+w-&&sr963zeekc(s9cyo1c+jr$9n7%%sh%%kd4g'
 #DEBUG = True
 #ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
+# Configure your Azure Blob Service Endpoint
+AZURE_BLOB_SERVICE_ENDPOINT = "https://mediakihuni2.blob.core.windows.net/"
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
