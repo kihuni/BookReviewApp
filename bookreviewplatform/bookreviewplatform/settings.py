@@ -2,6 +2,7 @@
 
 from pathlib import Path
 import os
+import dj_database_url
 from datetime import timedelta
 from storages.backends.azure_storage import AzureStorage
 #import environ
@@ -23,6 +24,9 @@ class AzureMediaStorage(AzureStorage):
 #SECRET_KEY = 'django-insecure-dzdzz3%%krny(o+w-&&sr963zeekc(s9cyo1c+jr$9n7%%sh%%kd4g'
 #DEBUG = True
 #ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+
+# Use the DATABASE_URL environment variable for the connection
+DATABASES = {'default': dj_database_url.config(default=os.environ['DATABASE_URL'])}
 
 # Configure your Azure Blob Service Endpoint
 AZURE_BLOB_SERVICE_ENDPOINT = "https://mediakihuni2.blob.core.windows.net/"
