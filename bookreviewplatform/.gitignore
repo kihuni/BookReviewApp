@@ -1,2 +1,11 @@
-.env
-/media/
+# Ignore all files and directories
+*
+
+# Include necessary files and directories
+!/.gitignore
+!/requirements.txt
+!/Procfile
+!/bookreviewplatform/
+!/media/
+!/static/
+!/db.sqlite3

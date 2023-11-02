@@ -1,29 +1,22 @@
-# Django settings for bookreviewplatform project.
-
 from pathlib import Path
 import os
 import dj_database_url
 from datetime import timedelta
 from storages.backends.azure_storage import AzureStorage
-#import environ
-#env = environ.Env()
-#environ.Env.read_env()
-#print(os.environ)
+
 
 # Azure Blob Storage settings
 
-ZURE_ACCOUNT_NAME = 'mediakihuni2'
-AZURE_ACCOUNT_KEY = 'PKoNAe1asSqsQLooipWPefZxZIx7Qq8A5XSpA4NZT1GAz57nwGAfCrZbbHa2c3SeDUPgh0R0vzbP+AStnUwRUQ=='
-AZURE_CONTAINER = 'mediakihuni2'
+ZURE_ACCOUNT_NAME = os.environ.get('ZURE_ACCOUNT_NAME')
+AZURE_ACCOUNT_KEY = os.environ.get('AZURE_ACCOUNT_KEY')
+AZURE_CONTAINER = os.environ.get('AZURE_CONTAINER')
 
 DEFAULT_FILE_STORAGE = 'bookreviewplatform.azure.AzureMediaStorage'
 
 
 class AzureMediaStorage(AzureStorage):
-    location = 'media'
-#SECRET_KEY = 'django-insecure-dzdzz3%%krny(o+w-&&sr963zeekc(s9cyo1c+jr$9n7%%sh%%kd4g'
-#DEBUG = True
-#ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+   location = 'media'
+    
 
 # Use the DATABASE_URL environment variable for the connection
 DATABASES = {'default': dj_database_url.config(default=os.environ['DATABASE_URL'])}
@@ -36,15 +29,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
-#SECRET_KEY = env('DJANGO_SECRET_KEY')
-#DEBUG = env.bool('DJANGO_DEBUG', default=True)
-#ALLOWED_HOSTS = env.list('DJANGO_ALLOWED_HOSTS', default=['localhost', '127.0.0.1', 'your-subdomain.onrender.com'])
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-dzdzz3%%krny(o+w-&&sr963zeekc(s9cyo1c+jr$9n7%%sh%%kd4g')
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 DEBUG = os.environ.get('DJANGO_DEBUG', 'True') == 'True' 
 ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1,0.0.0.0').split(',')
-#SECRET_KEY = 'django-insecure-dzdzz3%%krny(o+w-&&sr963zeekc(s9cyo1c+jr$9n7%%sh%%kd4g'
-#DEBUG = True
-#ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0', 'bookreviewapp.onrender.com']
+
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAuthenticated',),
     'DEFAULT_AUTHENTICATION_CLASSES': ('rest_framework_simplejwt.authentication.JWTAuthentication',),
