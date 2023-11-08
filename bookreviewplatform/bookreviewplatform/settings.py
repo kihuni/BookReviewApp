@@ -1,28 +1,8 @@
 from pathlib import Path
 import os
-import dj_database_url
 from datetime import timedelta
-from storages.backends.azure_storage import AzureStorage
-
-
-# Azure Blob Storage settings
-
-ZURE_ACCOUNT_NAME = os.environ.get('ZURE_ACCOUNT_NAME')
-AZURE_ACCOUNT_KEY = os.environ.get('AZURE_ACCOUNT_KEY')
-AZURE_CONTAINER = os.environ.get('AZURE_CONTAINER')
 
 DEFAULT_FILE_STORAGE = 'bookreviewplatform.azure.AzureMediaStorage'
-
-
-class AzureMediaStorage(AzureStorage):
-   location = 'media'
-    
-
-# Use the DATABASE_URL environment variable for the connection
-DATABASES = {'default': dj_database_url.config(default=os.environ['DATABASE_URL'])}
-
-# Configure your Azure Blob Service Endpoint
-AZURE_BLOB_SERVICE_ENDPOINT = "https://mediakihuni2.blob.core.windows.net/"
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
