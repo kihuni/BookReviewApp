@@ -23,13 +23,30 @@ const BookCreation = ( {user} ) => {
         formData.append('cover_image', coverImage)
 
         try {
-            await api.post('/books/', formData, {
-    
+
+            //upload the cover image to imbb
+
+            const imgbbResponse = await api.post('https://api.imgbb.com/1/upload', formData, {
+                headers: {
+                    'key': '424ea66bc43c5b58d096938fc1da1daf',
+                },
+            });
+
+            const imgbbData = imgbbResponse.data.data;
+            const imgbbImageUrl = imgbbData.url;
+
+            // Use the ImgBB image URL for the book cover image
+            await api.post('/books/', {
+                title,
+                author,
+                description,
+                cover_image: imgbbImageUrl,
+            }, {
                 headers: {
                     Authorization: `Bearer ${token}`,
-                    'Content-Type': 'multipart/form-data'
-                }
+                },
             });
+
             setSuccessMessage('Book successfully created!');
             setTitle('');
             setAuthor('');
@@ -43,7 +60,7 @@ const BookCreation = ( {user} ) => {
 
     return (
         <div className='bookCreation'>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} encType="multipart/form-data">
               <div>
                     <label htmlFor='cover_image'>Cover Image:</label>
                     <input type='file' id='cover_image' name='cover_image' onChange={e => setCoverImage(e.target.files[0])} />

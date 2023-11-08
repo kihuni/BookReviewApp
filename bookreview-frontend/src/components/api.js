@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: 'https://bookreviewapp.onrender.com/'
+    baseURL: 'https://bookreviewapp.onrender.com'
 });
 
 const unauthorizedCallbacks = [];

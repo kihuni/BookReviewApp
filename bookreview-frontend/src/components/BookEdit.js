@@ -71,7 +71,7 @@ function BookEdit() {
     return (
         <div className='bookedit'>
             <h2>Edit Book</h2>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} encType="multipart/form-data">
              <div>
                     <label htmlFor="cover_image">Cover Image:</label>
                     {coverImageUrl && <img src={coverImageUrl} alt="Book cover" />}
