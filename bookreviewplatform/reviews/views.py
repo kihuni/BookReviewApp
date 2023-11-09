@@ -83,8 +83,6 @@ class ReviewViewSet(viewsets.ModelViewSet):
     serializer_class = ReviewSerializer
     permission_classes = [IsAuthenticated]
     
-    
-    
 
     def get_queryset(self):
         if "book_pk" in self.kwargs:
