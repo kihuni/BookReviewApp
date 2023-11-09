@@ -14,6 +14,7 @@ import requests
 from .serializers import  BookSerializer, ReviewSerializer,VoteSerializers, UserSerializers
 from django.contrib.auth import authenticate
 from rest_framework.permissions import AllowAny, IsAuthenticated, BasePermission, SAFE_METHODS
+import logging
 
 jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
 jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
