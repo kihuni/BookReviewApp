@@ -26,7 +26,7 @@ const BookCreation = ( {user} ) => {
 
             //upload the cover image to imbb
 
-            const imgbbResponse = await api.post('https://api.imgbb.com/1/upload', formData, {
+            const imgbbResponse = await api.post('/imgbb-proxy/', formData, {
                 headers: {
                     'key': '424ea66bc43c5b58d096938fc1da1daf',
                 },

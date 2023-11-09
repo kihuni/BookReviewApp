@@ -8,6 +8,8 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import mixins
 from .models import *
 import requests
+from django.http import JsonResponse
+import requests
 from .serializers import  BookSerializer, ReviewSerializer,VoteSerializers, UserSerializers
 from django.contrib.auth import authenticate
 from rest_framework.permissions import AllowAny, IsAuthenticated, BasePermission, SAFE_METHODS
@@ -106,32 +108,17 @@ class ReviewViewSet(viewsets.ModelViewSet):
 
         return Response({"message": "Vote casted successfully!"}, status=status.HTTP_201_CREATED)
     
-    @action(detail=True, methods=['POST'])
-    def upload_image(self, request, pk=None):
-        review = self.get_object()
-
-        # Check if an image was uploaded in the request
-        image_file = request.FILES.get('image')
-
-        if not image_file:
-            return Response({"detail": "No image file provided."}, status=status.HTTP_400_BAD_REQUEST)
-
-        # Use the ImgBB API to upload the image
+   
+    def imgbb_proxy(request):
+        # Replace 'your_api_key' with your actual ImgBB API key
         imgbb_api_key = '424ea66bc43c5b58d096938fc1da1daf'
         imgbb_url = 'https://api.imgbb.com/1/upload'
 
-        imgbb_response = requests.post(imgbb_url, files={'image': image_file}, headers={'key': imgbb_api_key})
+        if request.method == 'POST':
+            # Forward the POST request to ImgBB
+            imgbb_response = requests.post(imgbb_url, data=request.POST, headers={'key': imgbb_api_key})
+            
+            # Return the ImgBB response to the frontend
+            return JsonResponse(imgbb_response.json())
 
-        if imgbb_response.status_code == 200:
-            imgbb_data = imgbb_response.json()
-            # Extract the URL from the ImgBB response
-            img_url = imgbb_data['data']['url']
-
-            # Create a new Review object with the image URL
-            serializer = ReviewSerializer(data={'image_url': img_url})
-            if serializer.is_valid():
-                serializer.save(user=request.user, book=review.book)
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        else:
-            return Response({"detail": "Image upload to ImgBB failed."}, status=imgbb_response.status_code)
+        return JsonResponse({'error': 'Invalid request method'}, status=400)
