@@ -18,6 +18,23 @@ jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
 jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
 
 # Create your views here.
+
+
+def imgbb_proxy(request):
+       
+       
+        imgbb_api_key = '424ea66bc43c5b58d096938fc1da1daf'
+        imgbb_url = 'https://api.imgbb.com/1/upload'
+
+        if request.method == 'POST':
+            # Forward the POST request to ImgBB
+            imgbb_response = requests.post(imgbb_url, data=request.POST, headers={'key': imgbb_api_key})
+            
+            # Return the ImgBB response to the frontend
+            return JsonResponse(imgbb_response.json())
+
+        return JsonResponse({'error': 'Invalid request method'}, status=400)
+    
 class ReadOnly(BasePermission):
     def has_permission(self,request,view):
         return request.method in SAFE_METHODS
@@ -109,17 +126,4 @@ class ReviewViewSet(viewsets.ModelViewSet):
         return Response({"message": "Vote casted successfully!"}, status=status.HTTP_201_CREATED)
     
    
-    def imgbb_proxy(request):
-       
-       
-        imgbb_api_key = '424ea66bc43c5b58d096938fc1da1daf'
-        imgbb_url = 'https://api.imgbb.com/1/upload'
-
-        if request.method == 'POST':
-            # Forward the POST request to ImgBB
-            imgbb_response = requests.post(imgbb_url, data=request.POST, headers={'key': imgbb_api_key})
-            
-            # Return the ImgBB response to the frontend
-            return JsonResponse(imgbb_response.json())
-
-        return JsonResponse({'error': 'Invalid request method'}, status=400)
+   
