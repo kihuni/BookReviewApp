@@ -16,5 +16,5 @@ urlpatterns = [
     path('user-books/', UserViewSet.as_view({'get': 'user_books'})),
     path('reviews/<int:pk>/vote/', ReviewViewSet.as_view({'post': 'vote'})),
     path('reviews/<int:pk>/upload-image/', ReviewViewSet.as_view({'post': 'upload_image'})),
-     path('imgbb-proxy/', imgbb_proxy, name='imgbb_proxy'),
+    path('imgbb-proxy/', imgbb_proxy, name='imgbb_proxy'),
 ]

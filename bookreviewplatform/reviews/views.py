@@ -110,7 +110,8 @@ class ReviewViewSet(viewsets.ModelViewSet):
     
    
     def imgbb_proxy(request):
-        # Replace 'your_api_key' with your actual ImgBB API key
+       
+       
         imgbb_api_key = '424ea66bc43c5b58d096938fc1da1daf'
         imgbb_url = 'https://api.imgbb.com/1/upload'
 
