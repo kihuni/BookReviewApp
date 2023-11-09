@@ -1,7 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import BookViewSet, ReviewViewSet, VoteViewSet,UserViewSet
-from .views import imgbb_proxy
+from .views import BookViewSet, ReviewViewSet, VoteViewSet, UserViewSet, imgbb_proxy  
 
 router = DefaultRouter()
 router.register(r'books', BookViewSet)
@@ -16,5 +15,5 @@ urlpatterns = [
     path('user-books/', UserViewSet.as_view({'get': 'user_books'})),
     path('reviews/<int:pk>/vote/', ReviewViewSet.as_view({'post': 'vote'})),
     path('reviews/<int:pk>/upload-image/', ReviewViewSet.as_view({'post': 'upload_image'})),
-    path('imgbb-proxy/', imgbb_proxy, name='imgbb_proxy'),
+    path('imgbb-proxy/', imgbb_proxy, name='imgbb_proxy'),  
 ]
