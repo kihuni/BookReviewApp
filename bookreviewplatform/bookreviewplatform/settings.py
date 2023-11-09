@@ -57,12 +57,13 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_ALL_ORIGINS = False
 
 CORS_ALLOWED_ORIGINS = [
     "https://book-review-app-tree-main-bookreview-frontend.vercel.app",
     "http://localhost:8000",
     "http://127.0.0.1:8000",
+    "https://api.imgbb.com"
 ]
 
 CORS_ALLOW_CREDENTIALS = True
