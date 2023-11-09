@@ -29,7 +29,14 @@ def imgbb_proxy(request):
 
         if request.method == 'POST':
             # Forward the POST request to ImgBB
-            imgbb_response = requests.post(imgbb_url, data=request.POST, headers={'key': imgbb_api_key})
+            imgbb_response = requests.post(
+                imgbb_url,
+                data=request.POST,
+                headers={
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'key': imgbb_api_key
+            }
+        )
             
             # Return the ImgBB response to the frontend
             return JsonResponse(imgbb_response.json())
