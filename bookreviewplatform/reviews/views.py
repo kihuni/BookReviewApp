@@ -7,6 +7,7 @@ from rest_framework_jwt.settings import api_settings
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import mixins
 from .models import *
+import os
 import requests
 from django.http import JsonResponse
 import requests
@@ -23,8 +24,8 @@ jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
 def imgbb_proxy(request):
        
        
-        imgbb_api_key = '424ea66bc43c5b58d096938fc1da1daf'
-        imgbb_url = 'https://api.imgbb.com/1/upload'
+        imgbb_api_key =  os.environ.get(imgbb_api_key)
+        imgbb_url = os.environ.get( imgbb_url)
 
         if request.method == 'POST':
             # Forward the POST request to ImgBB
