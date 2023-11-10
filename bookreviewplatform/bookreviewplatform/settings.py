@@ -84,7 +84,7 @@ CORS_ALLOWED_ORIGINS = [
 CORS_ALLOW_CREDENTIALS = True
 
 #CORS_ORIGIN_ALLOW_ALL = env.bool('CORS_ORIGIN_ALLOW_ALL', default=True)
-CORS_ORIGIN_ALLOW_ALL = True == 'True'
+CORS_ORIGIN_ALLOW_ALL = True
 ROOT_URLCONF = 'bookreviewplatform.urls'
 
 TEMPLATES = [
@@ -107,8 +107,8 @@ WSGI_APPLICATION = 'bookreviewplatform.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ.get('POSTGRES_DB', 'default_db_name'),
+       'ENGINE': 'django.db.backends.postgresql_psycopg2',
+       'NAME': os.environ.get('POSTGRES_DB', 'default_db_name'),
         'USER': os.environ.get('POSTGRES_USER', 'default_user'),
         'PASSWORD': os.environ.get('POSTGRES_PASSWORD', 'default_password'),
         'HOST': os.environ.get('POSTGRES_HOST', 'db'),
