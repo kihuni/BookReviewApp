@@ -57,6 +57,8 @@ const BookCreation = ( {user} ) => {
         } catch (error) {
             console.error('Error creating book:', error);
         }
+        console.log('FormData:', formData);
+        console.log('ImgBB Response:', imgbbResponse.data);
     };
 
     return (
