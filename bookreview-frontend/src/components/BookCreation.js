@@ -2,89 +2,109 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from './api';
 
-const BookCreation = ( {user} ) => {
-    const [title, setTitle] = useState('');
-    const [author, setAuthor] = useState('');
-    const [description, setDescription] = useState('');
-    const [coverImage, setCoverImage] = useState(null)
-    const [successMessage, setSuccessMessage] = useState('');
-    const navigate = useNavigate();
+const BookCreation = ({ user }) => {
+  const [title, setTitle] = useState('');
+  const [author, setAuthor] = useState('');
+  const [description, setDescription] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+  const navigate = useNavigate();
 
+  const handleImgBBUpload = async () => {
+    return new Promise((resolve, reject) => {
+      // Trigger the ImgBB upload plugin
+      window.openImgBBUploader({
+        apiKey: process.env.REACT_APP_IMGBB_API_KEY,
+        onSuccess: (result) => {
+          const imgbbImageUrl = result.url;
+          resolve(imgbbImageUrl);
+        },
+        onError: (error) => {
+          reject(error);
+        },
+      });
+    });
+  };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-        const token = localStorage.getItem('token');
-        const formData = new FormData();
+    const token = localStorage.getItem('token');
 
-        formData.append('title', title)
-        formData.append('author', author)
-        formData.append('description', description)
-        formData.append('cover_image', coverImage)
+    try {
+      // Upload the cover image to ImgBB using the ImgBB plugin
+      const imgbbImageUrl = await handleImgBBUpload();
 
-        try {
-
-            //upload the cover image to imbb
-
-            const imgbbResponse = await api.post('/imgbb-proxy/', formData, {
-                headers: {
-                    'key': '424ea66bc43c5b58d096938fc1da1daf',
-                },
-            });
-
-            const imgbbData = imgbbResponse.data.data;
-            const imgbbImageUrl = imgbbData.url;
-
-            // Use the ImgBB image URL for the book cover image
-            await api.post('/books/', {
-                title,
-                author,
-                description,
-                cover_image: imgbbImageUrl,
-            }, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    'Content-Type': 'multipart/form-data',
-                },
-            });
-
-            setSuccessMessage('Book successfully created!');
-            setTitle('');
-            setAuthor('');
-            setDescription('');
-            setCoverImage(null); 
-            navigate('/')
-        } catch (error) {
-            console.error('Error creating book:', error);
+      // Use the ImgBB image URL for the book cover image
+      await api.post(
+        '/books/',
+        {
+          title,
+          author,
+          description,
+          cover_image: imgbbImageUrl,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-        console.log('FormData:', formData);
-        console.log('ImgBB Response:', imgbbResponse.data);
-    };
+      );
 
-    return (
-        <div className='bookCreation'>
-            <form onSubmit={handleSubmit} encType="multipart/form-data">
-              <div>
-                    <label htmlFor='cover_image'>Cover Image:</label>
-                    <input type='file' id='cover_image' name='cover_image' onChange={e => setCoverImage(e.target.files[0])} />
-               </div>
-                <div>
-                    <label htmlFor='title'>Title:</label>
-                    <input type='text' id='title' name='title' value={title} onChange={e => setTitle(e.target.value)} required />
-                </div>
-                <div>
-                    <label htmlFor='author'>Author:</label>
-                    <input type='text' id='author' name='author' value={author} onChange={e => setAuthor(e.target.value)} required />
-                </div>
-                <div>
-                    <label htmlFor='description'>Description:</label>
-                    <textarea name="description" id="description"  value={description} onChange={e => setDescription(e.target.value)} required />
-                </div>
-                <button type="submit">Create Book</button>
-            </form>
-            {successMessage && <p>{successMessage}</p>}
+      setSuccessMessage('Book successfully created!');
+      setTitle('');
+      setAuthor('');
+      setDescription('');
+      navigate('/');
+    } catch (error) {
+      console.error('Error creating book:', error);
+    }
+  };
+
+  return (
+    <div className="bookCreation">
+      <form onSubmit={handleSubmit} encType="multipart/form-data">
+        <div>
+          <button type="button" onClick={handleImgBBUpload}>
+            Upload Cover Image
+          </button>
         </div>
-    );
-}
+        <div>
+          <label htmlFor="title">Title:</label>
+          <input
+            type="text"
+            id="title"
+            name="title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor="author">Author:</label>
+          <input
+            type="text"
+            id="author"
+            name="author"
+            value={author}
+            onChange={(e) => setAuthor(e.target.value)}
+            required
+          />
+        </div>
+        <div>
+          <label htmlFor="description">Description:</label>
+          <textarea
+            name="description"
+            id="description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            required
+          />
+        </div>
+        <button type="submit">Create Book</button>
+      </form>
+      {successMessage && <p>{successMessage}</p>}
+    </div>
+  );
+};
 
 export default BookCreation;
