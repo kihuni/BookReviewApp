@@ -21,24 +21,6 @@ jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
 
 # Create your views here.
 
-
-logger = logging.getLogger(__name__)
-
-def imgbb_proxy(request):
-    imgbb_api_key = os.environ.get('imgbb_api_key')
-    imgbb_url = os.environ.get('imgbb_url')
-
-    logger.debug(f"Received headers: {request.headers}")
-    logger.debug(f"Received data: {request.data}")
-
-    if request.method == 'POST':
-        imgbb_response = requests.post(imgbb_url, data=request.POST, headers={'key': imgbb_api_key})
-        logger.debug(f"ImgBB Response: {imgbb_response.status_code} - {imgbb_response.text}")
-
-        return JsonResponse(imgbb_response.json())
-
-    return JsonResponse({'error': 'Invalid request method'}, status=400)
-
     
 class ReadOnly(BasePermission):
     def has_permission(self,request,view):

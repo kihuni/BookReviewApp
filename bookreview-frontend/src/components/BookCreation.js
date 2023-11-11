@@ -13,7 +13,6 @@ const BookCreation = ( {user} ) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const imgbbApiKey = process.env.REACT_APP_IMGBB_API_KEY;
 
 
         const token = localStorage.getItem('token');
@@ -26,50 +25,44 @@ const BookCreation = ( {user} ) => {
 
         try {
 
-            //upload the cover image to imbb
-
-            const imgbbResponse = await api.post('/imgbb-proxy/', formData, {
-                headers: {
-                    'key': imgbbApiKey,
-                },
-            });
-
-            const imgbbData = imgbbResponse.data.data;
-            const imgbbImageUrl = imgbbData.url;
-
-            // Use the ImgBB image URL for the book cover image
-            await api.post('/books/', {
-                title,
-                author,
-                description,
-                cover_image: imgbbImageUrl,
-            }, {
+            const response = await api.post('/books/', formData, {
                 headers: {
                     Authorization: `Bearer ${token}`,
-                    'Content-Type': 'multipart/form-data',
                 },
             });
 
+            // Assuming the Django API sends the book data including the image URL
+            const newBook = response.data;
             setSuccessMessage('Book successfully created!');
             setTitle('');
             setAuthor('');
             setDescription('');
-            setCoverImage(null); 
-            navigate('/')
+            setCoverImage(null);
+            navigate('/');
         } catch (error) {
             console.error('Error creating book:', error);
         }
-        console.log('FormData:', formData);
-        console.log('ImgBB Response:', imgbbResponse.data);
     };
 
     return (
         <div className='bookCreation'>
             <form onSubmit={handleSubmit} encType="multipart/form-data">
-              <div>
-                    <label htmlFor='cover_image'>Cover Image:</label>
-                    <input type='file' id='cover_image' name='cover_image' onChange={e => setCoverImage(e.target.files[0])} />
-               </div>
+            <div>
+                    <label htmlFor="cover_image">Cover Image:</label>
+                    {coverImage && (
+                        <img
+                            src={URL.createObjectURL(coverImage)}
+                            alt="Preview"
+                            style={{ maxWidth: '200px', maxHeight: '200px' }}
+                        />
+                    )}
+                    <input
+                        type="file"
+                        id="cover_image"
+                        name="cover_image"
+                        onChange={(e) => setCoverImage(e.target.files[0])}
+                    />
+                </div>
                 <div>
                     <label htmlFor='title'>Title:</label>
                     <input type='text' id='title' name='title' value={title} onChange={e => setTitle(e.target.value)} required />
