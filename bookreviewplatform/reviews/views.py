@@ -57,7 +57,6 @@ class BookViewSet(viewsets.ModelViewSet):
         
         
     def retrieve(self, request, *args, **kwargs):
-        # Override the retrieve method to fetch additional book details from the Google Books API
         instance = self.get_object()
         serializer = self.get_serializer(instance)
         book_data = serializer.data
@@ -67,7 +66,7 @@ class BookViewSet(viewsets.ModelViewSet):
         api_key = os.environ.get('GOOGLE_BOOK_API_KEY')
         params = {'q': f'{book_data["title"]} {book_data["author"]}', 'key':api_key}
 
-        # Use 'requests.get()' instead of 'request.get()'
+       
         response = requests.get(google_books_api_url, params=params)
         
         # Check if the request was successful (status code 200)
