@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from './api';
+import '../style.css';
 
 const BookCreation = ( {user} ) => {
     const [title, setTitle] = useState('');
@@ -31,7 +32,7 @@ const BookCreation = ( {user} ) => {
                 },
             });
 
-            // Assuming the Django API sends the book data including the image URL
+            
             const newBook = response.data;
             setSuccessMessage('Book successfully created!');
             setTitle('');
@@ -42,6 +43,7 @@ const BookCreation = ( {user} ) => {
         } catch (error) {
             console.error('Error creating book:', error);
         }
+        console.log(formData)
     };
 
     return (

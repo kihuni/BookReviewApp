@@ -1,10 +1,22 @@
 from rest_framework import serializers
-from .models import Book, Review, Vote, User
+from .models import Book, ReadingChallenge, Review, UserProfile, Vote, User
+
+class UserProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserProfile
+        fields = '__all__'
+
 
 class BookSerializer(serializers.ModelSerializer):
     class Meta:
         model = Book
         fields = '__all__'
+        
+class ReadingChallengeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ReadingChallenge
+        fields = '__all__'
+
         
 class ReviewSerializer(serializers.ModelSerializer):
         class Meta:

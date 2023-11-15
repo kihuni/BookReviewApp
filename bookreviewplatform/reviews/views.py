@@ -11,7 +11,7 @@ import os
 import requests
 from django.http import JsonResponse
 import requests
-from .serializers import  BookSerializer, ReviewSerializer,VoteSerializers, UserSerializers
+from .serializers import  BookSerializer, ReadingChallengeSerializer, ReviewSerializer, UserProfileSerializer,VoteSerializers, UserSerializers
 from django.contrib.auth import authenticate
 from rest_framework.permissions import AllowAny, IsAuthenticated, BasePermission, SAFE_METHODS
 
@@ -20,6 +20,22 @@ jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
 jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
 
 # Create your views here.
+
+class UserProfileViewSet(viewsets.ModelViewSet):
+    serializer_class = UserProfileSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return UserProfile.objects.filter(user=self.request.user)
+
+class ReadingChallengeViewSet(viewsets.ModelViewSet):
+    serializer_class = ReadingChallengeSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return ReadingChallenge.objects.filter(user=self.request.user)
+
+
 
     
 class ReadOnly(BasePermission):
@@ -38,6 +54,81 @@ class BookViewSet(viewsets.ModelViewSet):
     
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+        
+        
+    def retrieve(self, request, *args, **kwargs):
+        # Override the retrieve method to fetch additional book details from the Google Books API
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        book_data = serializer.data
+
+        # Fetch additional details from the Google Books API using the book title and author
+        google_books_api_url = 'https://www.googleapis.com/books/v1/volumes'
+        api_key = os.environ.get('GOOGLE_BOOK_API_KEY')
+        params = {'q': f'{book_data["title"]} {book_data["author"]}', 'key':api_key}
+
+        # Use 'requests.get()' instead of 'request.get()'
+        response = requests.get(google_books_api_url, params=params)
+        
+        # Check if the request was successful (status code 200)
+        if response.status_code == 200:
+            google_books_data = response.json()
+            
+            # Update the book_data with additional details
+            if 'items' in google_books_data:
+                item = google_books_data['items'][0]  # Fixed typo 'item' to 'items'
+                book_data['google_books_data'] = {
+                    'description': item['volumeInfo'].get('description', ''),
+                    'published_date': item['volumeInfo'].get('publishedDate', ''),
+                    # Add other relevant details as needed
+                }
+            else:
+                # Handle the case where 'items' key is not present in the response
+                print(f"Error: 'items' key not found in Google Books API response.")
+        else:
+            # Handle the case where the Google Books API request was not successful
+            print(f"Error fetching data from Google Books API. Status code: {response.status_code}")
+        
+        return Response(book_data)
+
+
+    @action(detail=True, methods=['GET'])
+    def recommendations(self, request, pk=None):
+        book = self.get_object()
+        recommendations = self.generate_recommendations(book)
+        serializer = BookSerializer(recommendations, many=True) 
+        return Response(serializer.data)
+
+   
+    def generate_recommendations(self, book):
+        google_books_api_url = 'https://www.googleapis.com/books/v1/volumes'
+        api_key = os.environ.get('GOOGLE_BOOK_API_KEY')
+        params = {'q': f'similar:{book.title} {book.author}', 'maxResults': 5, 'key':  api_key}
+
+        try:
+            response = requests.get(google_books_api_url, params=params)
+            response.raise_for_status()
+            google_books_data = response.json()
+
+            recommendations = []
+            if 'items' in google_books_data:
+                for item in google_books_data['items']:
+                    recommendations.append({
+                        'title': item['volumeInfo'].get('title', ''),
+                        'author': ', '.join(item['volumeInfo'].get('authors', [])),
+                        'description': item['volumeInfo'].get('description', ''),
+                        'published_date': item['volumeInfo'].get('publishedDate', ''),
+                        # Add other relevant details as needed
+                    })
+
+            return recommendations
+
+        except requests.RequestException as e:
+            print(f"Error fetching recommendations from Google Books API: {e}")
+            return []
+        
+        
+        
     
 class VoteViewSet(viewsets.ModelViewSet):
     queryset = Vote.objects.all()
@@ -75,7 +166,8 @@ class UserViewSet(viewsets.GenericViewSet):
 
     @action(detail=False, methods=['GET'])
     def profile(self, request):
-        serializer = UserSerializers(request.user)
+        user_profile = UserProfile.objects.get(user=request.user)
+        serializer = UserProfileSerializer(user_profile)
         return Response(serializer.data)
     
     @action(detail=False, methods=['GET'])
@@ -83,6 +175,29 @@ class UserViewSet(viewsets.GenericViewSet):
         user_books = Book.objects.filter(user=request.user)
         serializer = BookSerializer(user_books, many=True)
         return Response(serializer.data)
+    
+    @action(detail=False, methods=['GET'])
+    def reading_challenge(self, request):
+        reading_challenge = ReadingChallenge.objects.get(user=request.user)
+        serializer = ReadingChallengeSerializer(reading_challenge)
+        return Response(serializer.data)
+
+    @action(detail=False, methods=['POST'])
+    def set_reading_challenge(self, request):
+        serializer = ReadingChallengeSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(user=request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=False, methods=['PATCH'])
+    def update_reading_challenge(self, request):
+        reading_challenge = ReadingChallenge.objects.get(user=request.user)
+        serializer = ReadingChallengeSerializer(reading_challenge, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ReviewViewSet(viewsets.ModelViewSet):

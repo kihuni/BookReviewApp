@@ -8,3 +8,4 @@ psycopg2==2.9.1
 django-environ==0.4.5
 storages
 dj-database-url
+requests==2.26.0

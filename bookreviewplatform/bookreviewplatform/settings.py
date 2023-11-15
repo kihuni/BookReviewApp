@@ -7,7 +7,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-dzdzz3%%krny(o+w-&&sr963zeekc(s9cyo1c+jr$9n7%%sh%%kd4g')
 DEBUG = os.environ.get('DJANGO_DEBUG', 'True') == 'True' 
 ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', 'localhost,127.0.0.1,0.0.0.0').split(',')
 
@@ -107,14 +107,14 @@ WSGI_APPLICATION = 'bookreviewplatform.wsgi.application'
 
 DATABASES = {
     'default': {
-       'ENGINE': 'django.db.backends.postgresql_psycopg2',
-       'NAME': os.environ.get('POSTGRES_DB', 'default_db_name'),
-        'USER': os.environ.get('POSTGRES_USER', 'default_user'),
-        'PASSWORD': os.environ.get('POSTGRES_PASSWORD', 'default_password'),
-        'HOST': os.environ.get('POSTGRES_HOST', 'db'),
-        'PORT': int(os.environ.get('POSTGRES_PORT', 5432)),
-      # 'ENGINE': 'django.db.backends.sqlite3',
-       # 'NAME': BASE_DIR / "db.sqlite3",
+      # 'ENGINE': 'django.db.backends.postgresql_psycopg2',
+      # 'NAME': os.environ.get('POSTGRES_DB', 'default_db_name'),
+       # 'USER': os.environ.get('POSTGRES_USER', 'default_user'),
+       # 'PASSWORD': os.environ.get('POSTGRES_PASSWORD', 'default_password'),
+        #'HOST': os.environ.get('POSTGRES_HOST', 'db'),
+        #'PORT': int(os.environ.get('POSTGRES_PORT', 5432)),
+       'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / "db.sqlite3",
     }
 }
 
