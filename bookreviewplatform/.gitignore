@@ -1,6 +1,6 @@
 # Ignore all files and directories
 *
-
+.env
 
 # Include necessary files and directories
 !/.gitignore
