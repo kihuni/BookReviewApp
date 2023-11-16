@@ -5,12 +5,6 @@ class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
         fields = '__all__'
-
-
-class BookSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Book
-        fields = '__all__'
         
 class ReadingChallengeSerializer(serializers.ModelSerializer):
     class Meta:
@@ -29,12 +23,6 @@ class VoteSerializers(serializers.ModelSerializer):
             fields = '__all__'
             
 class UserSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ('id','username', 'password', 'email', 'first_name', 'last_name')
-        extra_kwargs = {
-            'password': {'write_only': True}
-        }
         
     def create(self, validate_data):
         # Remove the password from the validated_data dictionary

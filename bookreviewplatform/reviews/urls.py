@@ -5,7 +5,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 router = DefaultRouter()
-router.register(r'books', BookViewSet)
+router.register(r'books', BookViewSet, basename='book')
 router.register(r'books/(?P<book_pk>\d+)/reviews', ReviewViewSet, basename='book-reviews')
 router.register(r'votes', VoteViewSet)
 router.register(r'user-profile', UserProfileViewSet, basename='user-profile'),  
@@ -20,6 +20,8 @@ urlpatterns = [
     path('user-books/', UserViewSet.as_view({'get': 'user_books'})),
     path('reviews/<int:pk>/vote/', ReviewViewSet.as_view({'post': 'vote'})),
     path('reviews/<int:pk>/upload-image/', ReviewViewSet.as_view({'post': 'upload_image'})),
+    path('user/google-login/', UserViewSet.as_view({'post': 'google_login'}), name='google-login'),
+
    
 
 ]

@@ -1,87 +1,104 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from './api';
 import '../style.css';
 
-const BookCreation = ( {user} ) => {
-    const [title, setTitle] = useState('');
-    const [author, setAuthor] = useState('');
-    const [description, setDescription] = useState('');
-    const [coverImage, setCoverImage] = useState(null)
-    const [successMessage, setSuccessMessage] = useState('');
-    const navigate = useNavigate();
+const BookCreation = ({ user }) => {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const [selectedBook, setSelectedBook] = useState(null);
+  const [successMessage, setSuccessMessage] = useState('');
+  const navigate = useNavigate();
 
+  const handleSearch = async () => {
+    try {
+      const response = await api.get('https://www.googleapis.com/books/v1/volumes', {
+        params: {
+          q: searchQuery,
+        },
+      });
+      setSearchResults(response.data.items);
+    } catch (error) {
+      console.error('Error fetching books:', error);
+    }
+  };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+  const handleSelectBook = (book) => {
+    setSelectedBook(book);
+  };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-        const token = localStorage.getItem('token');
-        const formData = new FormData();
+    if (!selectedBook) {
+      console.error('Please select a book from the search results.');
+      return;
+    }
 
-        formData.append('title', title)
-        formData.append('author', author)
-        formData.append('description', description)
-        formData.append('cover_image', coverImage)
+    const token = localStorage.getItem('token');
 
-        try {
+    const formData = new FormData();
+    formData.append('title', selectedBook.volumeInfo.title);
+    formData.append('author', selectedBook.volumeInfo.authors ? selectedBook.volumeInfo.authors.join(', ') : '');
+    formData.append('description', selectedBook.volumeInfo.description);
+    formData.append('cover_image', selectedBook.volumeInfo.imageLinks?.thumbnail || '');
 
-            const response = await api.post('/books/', formData, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
+    try {
+      const response = await api.post('/books/', formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-            
-            const newBook = response.data;
-            setSuccessMessage('Book successfully created!');
-            setTitle('');
-            setAuthor('');
-            setDescription('');
-            setCoverImage(null);
-            navigate('/');
-        } catch (error) {
-            console.error('Error creating book:', error);
-        }
-        console.log(formData)
-    };
+      const newBook = response.data;
+      setSuccessMessage('Book successfully created!');
+      setSelectedBook(null);
+      navigate('/');
+    } catch (error) {
+      console.error('Error creating book:', error);
+    }
+  };
 
-    return (
-        <div className='bookCreation'>
-            <form onSubmit={handleSubmit} encType="multipart/form-data">
-            <div>
-                    <label htmlFor="cover_image">Cover Image:</label>
-                    {coverImage && (
-                        <img
-                            src={URL.createObjectURL(coverImage)}
-                            alt="Preview"
-                            style={{ maxWidth: '200px', maxHeight: '200px' }}
-                        />
-                    )}
-                    <input
-                        type="file"
-                        id="cover_image"
-                        name="cover_image"
-                        onChange={(e) => setCoverImage(e.target.files[0])}
-                    />
-                </div>
-                <div>
-                    <label htmlFor='title'>Title:</label>
-                    <input type='text' id='title' name='title' value={title} onChange={e => setTitle(e.target.value)} required />
-                </div>
-                <div>
-                    <label htmlFor='author'>Author:</label>
-                    <input type='text' id='author' name='author' value={author} onChange={e => setAuthor(e.target.value)} required />
-                </div>
-                <div>
-                    <label htmlFor='description'>Description:</label>
-                    <textarea name="description" id="description"  value={description} onChange={e => setDescription(e.target.value)} required />
-                </div>
-                <button type="submit">Create Book</button>
-            </form>
-            {successMessage && <p>{successMessage}</p>}
+  return (
+    <div className="bookCreation">
+      <form onSubmit={handleSubmit} encType="multipart/form-data">
+        <div>
+          <label htmlFor="searchQuery">Search Books:</label>
+          <input
+            type="text"
+            id="searchQuery"
+            name="searchQuery"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          <button type="button" onClick={handleSearch}>
+            Search
+          </button>
         </div>
-    );
-}
+        {searchResults.length > 0 && (
+          <div>
+            <h3>Search Results:</h3>
+            <ul>
+              {searchResults.map((book) => (
+                <li key={book.id} onClick={() => handleSelectBook(book)}>
+                  {book.volumeInfo.title} by {book.volumeInfo.authors?.join(', ')}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+        {selectedBook && (
+          <div>
+            <h3>Selected Book:</h3>
+            <p>Title: {selectedBook.volumeInfo.title}</p>
+            <p>Author: {selectedBook.volumeInfo.authors?.join(', ')}</p>
+            <p>Description: {selectedBook.volumeInfo.description}</p>
+          </div>
+        )}
+      </form>
+      {successMessage && <p>{successMessage}</p>}
+    </div>
+  );
+};
 
 export default BookCreation;

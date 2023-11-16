@@ -1,7 +1,7 @@
+# models.py
+
 from django.db import models
 from django.contrib.auth.models import User
-
-# Create your models here.
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -10,21 +10,7 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return f"Profile for {self.user.username}"
-    
 
-
-class Book(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='books', null=True)
-    title = models.CharField(max_length=255)
-    author = models.CharField(max_length=255)
-    description = models.TextField()
-    cover_image = models.ImageField(upload_to='books/covers/', null=True, blank=True)
-    published_date = models.DateField(null=True, blank=True)
-    added_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.title
-    
 class ReadingChallenge(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     goal = models.PositiveIntegerField(default=0)
@@ -33,9 +19,8 @@ class ReadingChallenge(models.Model):
     def __str__(self):
         return f"Reading Challenge for {self.user.username}"
 
-
 class Review(models.Model):
-    book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='reviews')
+    book = models.ForeignKey('Book', on_delete=models.CASCADE, related_name='reviews')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     content = models.TextField()
     rating = models.PositiveSmallIntegerField(choices=[(i, i) for i in range(1, 6)])  
@@ -55,5 +40,15 @@ class Vote(models.Model):
 
     def __str__(self):
         return f"Vote by {self.user.username} for review {self.review.id}"
-    
- 
+
+class Book(models.Model):
+    # Remove the user field from Book since we are now relying on the Google Books API
+    title = models.CharField(max_length=255)
+    author = models.CharField(max_length=255)
+    description = models.TextField()
+    cover_image = models.ImageField(upload_to='books/covers/', null=True, blank=True)
+    published_date = models.DateField(null=True, blank=True)
+    added_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import '../style.css';
 import api from './api';
 import { useNavigate } from 'react-router-dom';
+import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 
 const Login = ({ fetchUserProfile, setUser }) => {
     const [username, setUsername] = useState("");
@@ -21,9 +22,23 @@ const Login = ({ fetchUserProfile, setUser }) => {
 
             localStorage.setItem('token', response.data.token); // Save the token to local storage
             await fetchUserProfile();  // Fetch the user profile
-            navigate('/user-profile'); // Navigate to the user profile page
+            navigate('/create'); // Navigate to the user profile page
         } catch (err) {
             setError("Invalid credentials. Please try again.");
+        }
+    };
+
+    const responseGoogle = async (response) => {
+        try {
+            const googleResponse = await api.post('/google-login/', {
+                id_token: response.tokenId,
+            });
+
+            localStorage.setItem('token', googleResponse.data.token);
+            await fetchUserProfile();
+            navigate('/create');
+        } catch (err) {
+            setError('Google Sign-In failed. Please try again.');
         }
     };
 
@@ -48,6 +63,9 @@ const Login = ({ fetchUserProfile, setUser }) => {
                 />
                 <button type="submit">Login</button>
             </form>
+            <GoogleOAuthProvider clientId="333808842220-evonajk2k4m9nog5gblei5e19hh1b8r7.apps.googleusercontent.com">
+                <GoogleLogin onSuccess={responseGoogle} onFailure={responseGoogle} />
+            </GoogleOAuthProvider>
         </div>
     );
 }
