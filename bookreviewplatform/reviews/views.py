@@ -16,6 +16,7 @@ import requests
 from .serializers import SelectedBookSerializer,BookSerializer, UserProfileSerializer, ReadingChallengeSerializer, ReviewSerializer, VoteSerializers, UserSerializers
 from django.contrib.auth import authenticate
 from rest_framework.permissions import AllowAny, IsAuthenticated, BasePermission, SAFE_METHODS
+from django.db.models import Count
 
 jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
 jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
@@ -33,9 +34,19 @@ class UserProfileViewSet(viewsets.ModelViewSet):
         book_id = request.data.get('book_id')
         book = Book.objects.get(pk=book_id)
 
+        # Link the selected book to the user's profile
+        user_profile.selected_books.add(book)
+
         selected_book = SelectedBook.objects.create(user=request.user, book=book)
         serializer = SelectedBookSerializer(selected_book)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
+    @action(detail=False, methods=['GET'])
+    def selected_books(self, request):
+        user_profile = self.request.user.user_profile
+        selected_books = SelectedBook.objects.filter(user_profile=user_profile)
+        serializer = SelectedBookSerializer(selected_books, many=True)
+        return Response(serializer.data)
 
 
 class ReadingChallengeViewSet(viewsets.ModelViewSet):
@@ -89,11 +100,11 @@ class BookViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['GET'])
     def recommendations(self, request, pk=None):
         book = self.get_object()
-        recommendations = self.generate_recommendations(book)
-        serializer = UserProfileSerializer(recommendations, many=True)
+        recommendations = self.generate_google_books_recommendations(book)
+        serializer = BookSerializer(recommendations, many=True)
         return Response(serializer.data)
 
-    def generate_recommendations(self, book):
+    def generate_google_books_recommendations(self, book):
         google_books_api_url = 'https://www.googleapis.com/books/v1/volumes'
         api_key = os.environ.get('GOOGLE_BOOK_API_KEY')
         params = {'q': f'similar:{book.title} {book.author}', 'maxResults': 5, 'key': api_key}
@@ -118,7 +129,7 @@ class BookViewSet(viewsets.ModelViewSet):
         except requests.RequestException as e:
             print(f"Error fetching recommendations from Google Books API: {e}")
             return []
-
+        
 class VoteViewSet(viewsets.ModelViewSet):
     queryset = Vote.objects.all()
     serializer_class = VoteSerializers
@@ -161,7 +172,7 @@ class UserViewSet(viewsets.GenericViewSet):
     
     @action(detail=False, methods=['GET'])
     def user_books(self, request):
-        user_books = SelectedBook.objects.filter(user=request.user)
+        user_books = SelectedBook.objects.filter(user_profile__user=self.request.user)
         serializer = SelectedBookSerializer(user_books, many=True)
         return Response(serializer.data)
 

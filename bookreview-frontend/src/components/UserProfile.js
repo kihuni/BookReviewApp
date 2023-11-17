@@ -1,3 +1,5 @@
+// UserProfile.js
+
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import api from './api';
@@ -16,32 +18,27 @@ const UserProfile = () => {
       const config = {
         headers: { Authorization: `Bearer ${token}` },
       };
-    
+
       try {
         // Fetch user profile
         const userResponse = await api.get('/user-profile/', config);
-        console.log('User Profile:', userResponse.data);
         setUser(userResponse.data);
-    
+
         // Fetch user's selected books
         const selectedBooksResponse = await api.get('/user-profile/selected_books/', config);
-        console.log('Selected Books:', selectedBooksResponse.data);
         setUserSelectedBooks(selectedBooksResponse.data);
-    
+
         // Fetch reading challenge
         const challengeResponse = await api.get('/reading-challenge/', config);
-        console.log('Reading Challenge:', challengeResponse.data);
         setReadingChallenge(challengeResponse.data);
-    
+
         // Fetch recommended books
         const recommendedBooksResponse = await api.get('/books/recommendations/', config);
-        console.log('Recommended Books:', recommendedBooksResponse.data);
         setRecommendedBooks(recommendedBooksResponse.data);
       } catch (error) {
         console.error('Error fetching user profile and books:', error);
       }
     }
-    
 
     fetchUserAndBooks();
   }, []);
