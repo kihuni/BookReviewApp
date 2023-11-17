@@ -5,12 +5,9 @@ import '../style.css';
 
 const UserProfile = () => {
   const [user, setUser] = useState(null);
-  const [userBooks, setUserBooks] = useState([]);
+  const [userSelectedBooks, setUserSelectedBooks] = useState([]);
   const [readingChallenge, setReadingChallenge] = useState(null);
   const [recommendedBooks, setRecommendedBooks] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
-  const [selectedBook, setSelectedBook] = useState(null);
   const [successMessage, setSuccessMessage] = useState('');
 
   useEffect(() => {
@@ -19,91 +16,57 @@ const UserProfile = () => {
       const config = {
         headers: { Authorization: `Bearer ${token}` },
       };
-
+    
       try {
         // Fetch user profile
         const userResponse = await api.get('/user-profile/', config);
+        console.log('User Profile:', userResponse.data);
         setUser(userResponse.data);
-
-        // Fetch user's saved books
-        const booksResponse = await api.get('/user-books/', config);
-        setUserBooks(booksResponse.data);
-
+    
+        // Fetch user's selected books
+        const selectedBooksResponse = await api.get('/user-profile/selected_books/', config);
+        console.log('Selected Books:', selectedBooksResponse.data);
+        setUserSelectedBooks(selectedBooksResponse.data);
+    
         // Fetch reading challenge
         const challengeResponse = await api.get('/reading-challenge/', config);
+        console.log('Reading Challenge:', challengeResponse.data);
         setReadingChallenge(challengeResponse.data);
-
+    
         // Fetch recommended books
         const recommendedBooksResponse = await api.get('/books/recommendations/', config);
+        console.log('Recommended Books:', recommendedBooksResponse.data);
         setRecommendedBooks(recommendedBooksResponse.data);
       } catch (error) {
         console.error('Error fetching user profile and books:', error);
       }
     }
+    
 
     fetchUserAndBooks();
   }, []);
 
-  const handleSearch = async () => {
+  const handleSelectBook = async (book) => {
     try {
       const token = localStorage.getItem('token');
-      const response = await api.get('https://www.googleapis.com/books/v1/volumes', {
-        params: {
-          q: searchQuery,
-        },
+      const response = await api.post(`/user-profile/${user.id}/select_book/`, { book_id: book.id }, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setSearchResults(response.data.items);
+      const newSelectedBook = response.data;
+      setUserSelectedBooks((prevBooks) => [...prevBooks, newSelectedBook]);
+      setSuccessMessage('Book successfully selected!');
     } catch (error) {
-      console.error('Error fetching books:', error);
+      console.error('Error selecting book:', error);
     }
   };
-
-  const handleSelectBook = (book) => {
-    setSelectedBook(book);
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (!selectedBook) {
-      console.error('Please select a book from the search results.');
-      return;
-    }
-
-    const token = localStorage.getItem('token');
-
-    const formData = new FormData();
-    formData.append('title', selectedBook.volumeInfo.title);
-    formData.append('author', selectedBook.volumeInfo.authors ? selectedBook.volumeInfo.authors.join(', ') : '');
-    formData.append('description', selectedBook.volumeInfo.description);
-    formData.append('cover_image', selectedBook.volumeInfo.imageLinks?.thumbnail || '');
-
-    try {
-      const response = await api.post('/books/', formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      const newBook = response.data;
-      setSuccessMessage('Book successfully created!');
-      setSelectedBook(null);
-    } catch (error) {
-      console.error('Error creating book:', error);
-    }
-  };
-
-  if (!user) return <div>Loading...</div>;
 
   return (
     <div className="userProfile">
-      <h3>Your Books:</h3>
-      {userBooks.map((book) => (
-        <div key={book.id}>
-          <h4>{book.title}</h4>
-          <p>By {book.author}</p>
-          <Link to={`/books/edit/${book.id}`}>Edit</Link>
+      <h3>Your Selected Books:</h3>
+      {userSelectedBooks.map((selectedBook) => (
+        <div key={selectedBook.id}>
+          <h4>{selectedBook.book.title}</h4>
+          <p>By {selectedBook.book.author}</p>
         </div>
       ))}
 
@@ -131,43 +94,6 @@ const UserProfile = () => {
         </div>
       )}
 
-      {/* Search functionality */}
-      <div>
-        <label htmlFor="searchQuery">Search Books:</label>
-        <input
-          type="text"
-          id="searchQuery"
-          name="searchQuery"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
-        <button type="button" onClick={handleSearch}>
-          Search
-        </button>
-      </div>
-      {searchResults.length > 0 && (
-        <div>
-          <h3>Search Results:</h3>
-          <ul>
-            {searchResults.map((book) => (
-              <li key={book.id} onClick={() => handleSelectBook(book)}>
-                {book.volumeInfo.title} by {book.volumeInfo.authors?.join(', ')}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-      {selectedBook && (
-        <div>
-          <h3>Selected Book:</h3>
-          <p>Title: {selectedBook.volumeInfo.title}</p>
-          <p>Author: {selectedBook.volumeInfo.authors?.join(', ')}</p>
-          <p>Description: {selectedBook.volumeInfo.description}</p>
-          <button type="button" onClick={handleSubmit}>
-            Save Book
-          </button>
-        </div>
-      )}
       {successMessage && <p>{successMessage}</p>}
     </div>
   );

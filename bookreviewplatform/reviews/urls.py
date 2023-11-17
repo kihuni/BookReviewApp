@@ -16,7 +16,7 @@ urlpatterns = [
     path('', include(router.urls)),
     path('register/', UserViewSet.as_view({'post': 'register'})),
     path('login/', UserViewSet.as_view({'post': 'login'})),
-    path('user-profile/', UserViewSet.as_view({'get': 'profile'})),
+    path('user-profile/', UserViewSet.as_view({'get': 'user_profile'})),
     path('user-books/', UserViewSet.as_view({'get': 'user_books'})),
     path('reviews/<int:pk>/vote/', ReviewViewSet.as_view({'post': 'vote'})),
     path('reviews/<int:pk>/upload-image/', ReviewViewSet.as_view({'post': 'upload_image'})),

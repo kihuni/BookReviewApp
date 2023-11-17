@@ -22,7 +22,7 @@ const Login = ({ fetchUserProfile, setUser }) => {
 
             localStorage.setItem('token', response.data.token); // Save the token to local storage
             await fetchUserProfile();  // Fetch the user profile
-            navigate('/create'); // Navigate to the user profile page
+            navigate('/user-profile'); // Navigate to the user profile page
         } catch (err) {
             setError("Invalid credentials. Please try again.");
         }
@@ -36,7 +36,7 @@ const Login = ({ fetchUserProfile, setUser }) => {
 
             localStorage.setItem('token', googleResponse.data.token);
             await fetchUserProfile();
-            navigate('/create');
+            navigate('/user-profile');
         } catch (err) {
             setError('Google Sign-In failed. Please try again.');
         }

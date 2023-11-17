@@ -11,6 +11,15 @@ class UserProfile(models.Model):
     def __str__(self):
         return f"Profile for {self.user.username}"
 
+class SelectedBook(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    book = models.ForeignKey('Book', on_delete=models.CASCADE)
+    selected_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} selected {self.book.title}"
+
+
 class ReadingChallenge(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     goal = models.PositiveIntegerField(default=0)
@@ -42,7 +51,6 @@ class Vote(models.Model):
         return f"Vote by {self.user.username} for review {self.review.id}"
 
 class Book(models.Model):
-    # Remove the user field from Book since we are now relying on the Google Books API
     title = models.CharField(max_length=255)
     author = models.CharField(max_length=255)
     description = models.TextField()

@@ -1,49 +1,39 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import ReviewForm from './ReviewForm';
-import ReviewItem from './ReviewItem';
 import api from './api';
 
 const BookDetail = () => {
     const { id } = useParams();
-    
     const [book, setBook] = useState(null);
-    const [reviews, setReviews] = useState([]);
 
     useEffect(() => {
-        async function fetchBookAndReviews() {
+        async function fetchBookDetails() {
             try {
-                const bookResponse = await api.get(`/books/${id}`);
-                setBook(bookResponse.data);
-
-                const reviewResponse = await api.get(`/books/${id}/reviews/`);
-                setReviews(reviewResponse.data);
+                const bookResponse = await api.get(`https://www.googleapis.com/books/v1/volumes/${id}`);
+                setBook(bookResponse.data.volumeInfo);
             } catch (error) {
                 console.error("Error fetching book details:", error);
             }
         }
 
-        fetchBookAndReviews();
+        fetchBookDetails();
     }, [id]);
-
-    const handleReviewAdded = (newReview) => {
-        if (newReview) {
-            setReviews(prevReviews => [newReview, ...prevReviews]);  
-        }
-    };
 
     if (!book) return <div>Loading...</div>;
 
+    // Construct the URL for reading the book on Google Books
+    const readUrl = `https://books.google.com/books?id=${id}`;
+
     return (
         <div className='bookdetails'>
-            <img src={book.cover_image} alt={book.title} className="bookCover" />
+            <img src={book.imageLinks?.thumbnail} alt={book.title} className="bookCover" />
             <h2>{book.title}</h2>
-            <p>By {book.author}</p>
-            <p>{book.description}</p>
-            <ReviewForm bookId={book.id} onReviewAdded={handleReviewAdded} />
-            {reviews.map(review => (
-                <ReviewItem key={review.id} review={review} />
-            ))}
+            <p>By {book.authors?.join(', ')}</p>
+
+            {/* Render HTML content */}
+            <div dangerouslySetInnerHTML={{ __html: book.description }} />
+
+            <a href={readUrl} target="_blank" rel="noopener noreferrer">Read on Google Books</a>
         </div>
     );
 }

@@ -13,7 +13,7 @@ import os
 import requests
 from django.http import JsonResponse
 import requests
-from .serializers import UserProfileSerializer, ReadingChallengeSerializer, ReviewSerializer, VoteSerializers, UserSerializers
+from .serializers import SelectedBookSerializer,BookSerializer, UserProfileSerializer, ReadingChallengeSerializer, ReviewSerializer, VoteSerializers, UserSerializers
 from django.contrib.auth import authenticate
 from rest_framework.permissions import AllowAny, IsAuthenticated, BasePermission, SAFE_METHODS
 
@@ -26,6 +26,17 @@ class UserProfileViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return UserProfile.objects.filter(user=self.request.user)
+
+    @action(detail=True, methods=['POST'])
+    def select_book(self, request, pk=None):
+        user_profile = self.get_object()
+        book_id = request.data.get('book_id')
+        book = Book.objects.get(pk=book_id)
+
+        selected_book = SelectedBook.objects.create(user=request.user, book=book)
+        serializer = SelectedBookSerializer(selected_book)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
 
 class ReadingChallengeViewSet(viewsets.ModelViewSet):
     serializer_class = ReadingChallengeSerializer
@@ -40,7 +51,7 @@ class ReadOnly(BasePermission):
 
 class BookViewSet(viewsets.ModelViewSet):
     queryset = Book.objects.none()
-    serializer_class = UserProfileSerializer
+    serializer_class = BookSerializer
     permission_classes = [IsAuthenticated | ReadOnly]
 
     def retrieve(self, request, *args, **kwargs):
@@ -147,6 +158,12 @@ class UserViewSet(viewsets.GenericViewSet):
         user_profile = UserProfile.objects.get(user=request.user)
         serializer = UserProfileSerializer(user_profile)
         return Response(serializer.data)
+    
+    @action(detail=False, methods=['GET'])
+    def user_books(self, request):
+        user_books = SelectedBook.objects.filter(user=request.user)
+        serializer = SelectedBookSerializer(user_books, many=True)
+        return Response(serializer.data)
 
     @action(detail=False, methods=['GET'])
     def reading_challenge(self, request):
@@ -180,27 +197,36 @@ class UserViewSet(viewsets.GenericViewSet):
         google_response = self.verify_google_token(id_token)
         
         if google_response.get('error'):
-            return Response({'detail': 'Google authentication failed.'}, status=status.HTTP_401_UNAUTHORIZED)
+            error_message = google_response.get('error_description', 'Google authentication failed.')
+            return Response({'detail': error_message}, status=status.HTTP_401_UNAUTHORIZED)
 
         # Extract user information from the Google response
         google_user_info = google_response.get('user_info', {})
         email = google_user_info.get('email', '')
         username = google_user_info.get('email', '').split('@')[0]  # Using email as a username
 
-        # Check if the user with the provided email already exists
-        user, created = User.objects.get_or_create(username=username, email=email)
+        try:
+            # Check if the user with the provided email already exists
+            user, created = User.objects.get_or_create(username=username, email=email)
 
-        # Authenticate the user
-        if created or not user.password:
-            # If the user is newly created or doesn't have a password, set an unusable password
-            user.set_unusable_password()
-            user.save()
+            # Authenticate the user
+            if created or not user.password:
+                # If the user is newly created or doesn't have a password, set an unusable password
+                user.set_unusable_password()
+                user.save()
 
-        # Generate JWT token for the authenticated user
-        refresh = RefreshToken.for_user(user)
-        access_token = str(refresh.access_token)
+            # Generate JWT token for the authenticated user
+            refresh = RefreshToken.for_user(user)
+            access_token = str(refresh.access_token)
 
-        return Response({'token': access_token})
+            return Response({'token': access_token})
+
+        except Exception as e:
+            # Log the exception for debugging purposes
+            print(f"Error during Google login: {e}")
+
+            # Return a generic error message to the client
+            return Response({'detail': 'Internal server error during Google login.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def verify_google_token(self, id_token):
         google_api_url = 'https://www.googleapis.com/oauth2/v3/tokeninfo'
@@ -212,8 +238,11 @@ class UserViewSet(viewsets.GenericViewSet):
             return response.json()
 
         except requests.RequestException as e:
+            # Log the exception for debugging purposes
             print(f"Error verifying Google token: {e}")
-            return {'error': 'Failed to verify Google token.'}
+
+            # Return a specific error message to the client
+            return {'error': 'Failed to verify Google token.', 'error_description': str(e)}
 
 class ReviewViewSet(viewsets.ModelViewSet):
     serializer_class = ReviewSerializer

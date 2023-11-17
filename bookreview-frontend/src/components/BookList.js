@@ -17,7 +17,7 @@ const BookList = ({ user }) => {
                         q: searchQuery,
                     },
                 });
-                setBooks(response.data.items); // Update to use items from the response
+                setBooks(response.data.items); 
             } catch (error) {
                 console.error('Error fetching books:', error);
             } finally {
@@ -61,9 +61,10 @@ const BookList = ({ user }) => {
                         >
                             <img src={book.volumeInfo.imageLinks?.thumbnail} alt={book.volumeInfo.title} />
                             <h2 className="bookList">
-                                <Link to={`/books/${book.id}`}>
-                                    <span>Book Title:</span> {book.volumeInfo.title}
-                                </Link>
+                              <Link to={`/books/${book.id}`}>
+                                  <span>Book Title:</span> {book.volumeInfo.title}
+                              </Link>
+
                             </h2>
                             <p className="booklist">
                                 <span>By </span>
