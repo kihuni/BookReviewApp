@@ -26,27 +26,52 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return UserProfile.objects.filter(user=self.request.user)
+        user = self.request.user
+        print(f"Current user: {user.username}")
 
-    @action(detail=True, methods=['POST'])
-    def select_book(self, request, pk=None):
-        user_profile = self.get_object()
-        book_id = request.data.get('book_id')
-        book = Book.objects.get(pk=book_id)
+        profiles = UserProfile.objects.filter(user=user)
+        print(f"User profiles: {profiles}")
 
-        # Link the selected book to the user's profile
-        user_profile.selected_books.add(book)
+        return profiles
 
-        selected_book = SelectedBook.objects.create(user=request.user, book=book)
-        serializer = SelectedBookSerializer(selected_book)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-    
+    @action(detail=False, methods=['GET'])
+    def user_books(self, request):
+        user = self.request.user
+        print(f"Current user in user_books action: {user.username}")
+
+        try:
+            user_profile = user.user_profile
+            user_books = SelectedBook.objects.filter(user_profile=user_profile)
+            serializer = SelectedBookSerializer(user_books, many=True)
+
+            # Print the selected books for debugging
+            print(f"Selected books for {user.username}: {serializer.data}")
+
+            return Response(serializer.data)
+        except UserProfile.DoesNotExist:
+            # Handle the case where UserProfile doesn't exist for the user
+            print(f"UserProfile not found for {user.username}")
+            return Response({'detail': 'UserProfile does not exist for this user.'}, status=status.HTTP_404_NOT_FOUND)
+
+        
     @action(detail=False, methods=['GET'])
     def selected_books(self, request):
-        user_profile = self.request.user.user_profile
-        selected_books = SelectedBook.objects.filter(user_profile=user_profile)
-        serializer = SelectedBookSerializer(selected_books, many=True)
-        return Response(serializer.data)
+        user = self.request.user
+        print(f"Current user in selected_books action: {user.username}")
+
+        if hasattr(user, 'user_profile'):
+            user_profile = user.user_profile
+            selected_books = SelectedBook.objects.filter(user_profile=user_profile)
+            serializer = SelectedBookSerializer(selected_books, many=True)
+
+            # Print the selected books for debugging
+            print(f"Selected books for {user.username}: {serializer.data}")
+
+            return Response(serializer.data)
+        else:
+            # Handle the case where UserProfile doesn't exist for the user
+            print(f"UserProfile not found for {user.username}")
+            return Response({'detail': 'UserProfile does not exist for this user.'}, status=status.HTTP_404_NOT_FOUND)
 
 
 class ReadingChallengeViewSet(viewsets.ModelViewSet):
@@ -148,6 +173,11 @@ class UserViewSet(viewsets.GenericViewSet):
         serializer = UserSerializers(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
+
+            # Print the created user and associated UserProfile
+            user_profile, created = UserProfile.objects.get_or_create(user=user)
+            print(f"Registered user: {user.username}, UserProfile created: {created}")
+
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -161,7 +191,15 @@ class UserViewSet(viewsets.GenericViewSet):
         if user:
             refresh = RefreshToken.for_user(user)
             access_token = str(refresh.access_token)
+
+            # Create or retrieve UserProfile for the user
+            user_profile, created = UserProfile.objects.get_or_create(user=user)
+
+            # Print the logged-in user and associated UserProfile
+            print(f"Logged in user: {user.username}, UserProfile created: {created}")
+
             return Response({'token': access_token})
+        
         return Response({"detail": "Invalid credentials."}, status=status.HTTP_401_UNAUTHORIZED)
 
     @action(detail=False, methods=['GET'])

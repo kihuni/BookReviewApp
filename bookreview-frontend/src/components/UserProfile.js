@@ -1,61 +1,40 @@
-// UserProfile.js
-
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import api from './api';
 import '../style.css';
 
 const UserProfile = () => {
-  const [user, setUser] = useState(null);
   const [userSelectedBooks, setUserSelectedBooks] = useState([]);
   const [readingChallenge, setReadingChallenge] = useState(null);
   const [recommendedBooks, setRecommendedBooks] = useState([]);
   const [successMessage, setSuccessMessage] = useState('');
 
   useEffect(() => {
-    async function fetchUserAndBooks() {
+    async function fetchUserProfileData() {
       const token = localStorage.getItem('token');
       const config = {
         headers: { Authorization: `Bearer ${token}` },
       };
 
       try {
-        // Fetch user profile
-        const userResponse = await api.get('/user-profile/', config);
-        setUser(userResponse.data);
-
         // Fetch user's selected books
         const selectedBooksResponse = await api.get('/user-profile/selected_books/', config);
         setUserSelectedBooks(selectedBooksResponse.data);
 
         // Fetch reading challenge
-        //const challengeResponse = await api.get('/reading-challenge/', config);
-        //setReadingChallenge(challengeResponse.data);
+        const challengeResponse = await api.get('/reading-challenge/', config);
+        setReadingChallenge(challengeResponse.data);
 
         // Fetch recommended books
         const recommendedBooksResponse = await api.get('/books/recommendations/', config);
         setRecommendedBooks(recommendedBooksResponse.data);
       } catch (error) {
-        console.error('Error fetching user profile and books:', error);
+        console.error('Error fetching user profile data:', error);
       }
     }
 
-    fetchUserAndBooks();
+    fetchUserProfileData();
   }, []);
-
-  const handleSelectBook = async (book) => {
-    try {
-      const token = localStorage.getItem('token');
-      const response = await api.post(`/user-profile/${user.id}/select_book/`, { book_id: book.id }, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      const newSelectedBook = response.data;
-      setUserSelectedBooks((prevBooks) => [...prevBooks, newSelectedBook]);
-      setSuccessMessage('Book successfully selected!');
-    } catch (error) {
-      console.error('Error selecting book:', error);
-    }
-  };
 
   return (
     <div className="userProfile">
