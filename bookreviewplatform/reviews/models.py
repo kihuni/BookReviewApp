@@ -13,7 +13,7 @@ class UserProfile(models.Model):
         return f"Profile for {self.user.username}"
 
 class SelectedBook(models.Model):
-    user_profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE, default=1)  # Set a default UserProfile instance
+    user_profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE, default=1) 
     book = models.ForeignKey('Book', on_delete=models.CASCADE)
     selected_at = models.DateTimeField(auto_now_add=True)
 
