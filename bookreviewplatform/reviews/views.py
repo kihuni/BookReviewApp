@@ -41,7 +41,7 @@ class UserProfileViewSet(viewsets.ModelViewSet):
         print(f"Current user in user_books action: {user.username}")
 
         try:
-            user_profile = user.user_profile
+            user_profile = user.userprofile
             user_books = SelectedBook.objects.filter(user_profile=user_profile)
             serializer = SelectedBookSerializer(user_books, many=True)
 
@@ -69,7 +69,7 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         user = self.request.user
         try:
-            user_profile = user.user_profile
+            user_profile = user.userprofile 
             user_books = SelectedBook.objects.filter(user_profile=user_profile)
             serializer = SelectedBookSerializer(user_books, many=True)
             return Response(serializer.data)

@@ -18,7 +18,7 @@ const UserProfile = () => {
 
       try {
         // Fetch user's selected books
-        const selectedBooksResponse = await api.get('/user-profile/selected_books/', config);
+        const selectedBooksResponse = await api.get('/user-profile/user_books/', config);
         setUserSelectedBooks(selectedBooksResponse.data);
 
         // Fetch reading challenge
