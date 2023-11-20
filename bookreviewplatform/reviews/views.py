@@ -24,6 +24,7 @@ jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
 class UserProfileViewSet(viewsets.ModelViewSet):
     serializer_class = UserProfileSerializer
     permission_classes = [IsAuthenticated]
+    lookup_field = 'pk'
 
     def get_queryset(self):
         user = self.request.user
@@ -53,13 +54,13 @@ class UserProfileViewSet(viewsets.ModelViewSet):
             print(f"UserProfile not found for {user.username}")
             return Response({'detail': 'UserProfile does not exist for this user.'}, status=status.HTTP_404_NOT_FOUND)
 
-        
+            
     @action(detail=False, methods=['GET'])
     def selected_books(self, request):
         user = self.request.user
         print(f"Current user in selected_books action: {user.username}")
 
-        if hasattr(user, 'user_profile'):
+        try:
             user_profile = user.user_profile
             selected_books = SelectedBook.objects.filter(user_profile=user_profile)
             serializer = SelectedBookSerializer(selected_books, many=True)
@@ -68,10 +69,12 @@ class UserProfileViewSet(viewsets.ModelViewSet):
             print(f"Selected books for {user.username}: {serializer.data}")
 
             return Response(serializer.data)
-        else:
+        except UserProfile.DoesNotExist:
             # Handle the case where UserProfile doesn't exist for the user
             print(f"UserProfile not found for {user.username}")
             return Response({'detail': 'UserProfile does not exist for this user.'}, status=status.HTTP_404_NOT_FOUND)
+
+
 
 
 class ReadingChallengeViewSet(viewsets.ModelViewSet):
@@ -167,19 +170,20 @@ class UserViewSet(viewsets.GenericViewSet):
         if self.action == 'register' or self.action == 'login':
             return [AllowAny()]
         return [IsAuthenticated()]
-
+    
+    
     @action(detail=False, methods=['POST'])
     def register(self, request):
         serializer = UserSerializers(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
 
-            # Print the created user and associated UserProfile
+            # Create or retrieve UserProfile for the user
             user_profile, created = UserProfile.objects.get_or_create(user=user)
-            print(f"Registered user: {user.username}, UserProfile created: {created}")
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
     @action(detail=False, methods=['POST'])
     def login(self, request):
@@ -192,15 +196,14 @@ class UserViewSet(viewsets.GenericViewSet):
             refresh = RefreshToken.for_user(user)
             access_token = str(refresh.access_token)
 
-            # Create or retrieve UserProfile for the user
-            user_profile, created = UserProfile.objects.get_or_create(user=user)
-
-            # Print the logged-in user and associated UserProfile
-            print(f"Logged in user: {user.username}, UserProfile created: {created}")
+            # Retrieve UserProfile for the user
+            user_profile = UserProfile.objects.get(user=user)
 
             return Response({'token': access_token})
         
         return Response({"detail": "Invalid credentials."}, status=status.HTTP_401_UNAUTHORIZED)
+
+
 
     @action(detail=False, methods=['GET'])
     def profile(self, request):

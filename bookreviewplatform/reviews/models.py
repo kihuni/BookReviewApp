@@ -3,7 +3,6 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     reading_challenge_goal = models.PositiveIntegerField(default=0)
@@ -11,6 +10,11 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return f"Profile for {self.user.username}"
+
+    @property
+    def selected_books(self):
+        return SelectedBook.objects.filter(user_profile=self)
+
 
 class SelectedBook(models.Model):
     user_profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE, default=1) 
