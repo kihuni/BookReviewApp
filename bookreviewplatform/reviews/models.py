@@ -8,21 +8,19 @@ class UserProfile(models.Model):
     reading_challenge_goal = models.PositiveIntegerField(default=0)
     reading_challenge_progress = models.PositiveIntegerField(default=0)
 
-    def __str__(self):
-        return f"Profile for {self.user.username}"
+    def add_selected_book(self, book_id):
+        # Check if the book is not already selected
+        if not self.selected_books.filter(book_id=book_id).exists():
+            # Assuming you have a model for selected books and a ForeignKey to Book model
+            selected_book = SelectedBook.objects.create(user_profile=self, book_id=book_id)
+            self.selected_books.add(selected_book)
 
-    @property
-    def selected_books(self):
-        return SelectedBook.objects.filter(user_profile=self)
 
 
 class SelectedBook(models.Model):
-    user_profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE, default=1) 
-    book = models.ForeignKey('Book', on_delete=models.CASCADE)
-    selected_at = models.DateTimeField(auto_now_add=True)
+    user_profile = models.ForeignKey(UserProfile, related_name='selected_books', on_delete=models.CASCADE)
+    book_id = models.CharField(max_length=255, default='some_default_value')
 
-    def __str__(self):
-        return f"{self.user_profile.user.username} selected {self.book.title}"
 
 
 class ReadingChallenge(models.Model):

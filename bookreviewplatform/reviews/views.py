@@ -54,24 +54,26 @@ class UserProfileViewSet(viewsets.ModelViewSet):
             print(f"UserProfile not found for {user.username}")
             return Response({'detail': 'UserProfile does not exist for this user.'}, status=status.HTTP_404_NOT_FOUND)
 
-            
-    @action(detail=False, methods=['GET'])
+                
+    @action(detail=False, methods=['POST'])
     def selected_books(self, request):
-        user = self.request.user
-        print(f"Current user in selected_books action: {user.username}")
+        user_profile = self.get_object()
+        book_id = request.data.get('book_id')
 
+        # Assuming you have a method to associate the book with the user
+        user_profile.add_selected_book(book_id)
+
+        # Optionally, you can return a response if needed
+        return Response({'message': 'Book selected successfully'})
+    
+    def list(self, request, *args, **kwargs):
+        user = self.request.user
         try:
             user_profile = user.user_profile
-            selected_books = SelectedBook.objects.filter(user_profile=user_profile)
-            serializer = SelectedBookSerializer(selected_books, many=True)
-
-            # Print the selected books for debugging
-            print(f"Selected books for {user.username}: {serializer.data}")
-
+            user_books = SelectedBook.objects.filter(user_profile=user_profile)
+            serializer = SelectedBookSerializer(user_books, many=True)
             return Response(serializer.data)
         except UserProfile.DoesNotExist:
-            # Handle the case where UserProfile doesn't exist for the user
-            print(f"UserProfile not found for {user.username}")
             return Response({'detail': 'UserProfile does not exist for this user.'}, status=status.HTTP_404_NOT_FOUND)
 
 
