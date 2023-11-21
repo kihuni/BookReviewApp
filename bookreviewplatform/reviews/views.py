@@ -13,7 +13,7 @@ import os
 import requests
 from django.http import JsonResponse
 import requests
-from .serializers import SelectedBookSerializer,BookSerializer, UserProfileSerializer, ReadingChallengeSerializer, ReviewSerializer, VoteSerializers, UserSerializers
+from .serializers import SelectedBookSerializer, BookSerializer, UserProfileSerializer, ReadingChallengeSerializer, ReviewSerializer, VoteSerializers, UserSerializers
 from django.contrib.auth import authenticate
 from rest_framework.permissions import AllowAny, IsAuthenticated, BasePermission, SAFE_METHODS
 from django.db.models import Count
@@ -28,12 +28,7 @@ class UserProfileViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        print(f"Current user: {user.username}")
-
-        profiles = UserProfile.objects.filter(user=user)
-        print(f"User profiles: {profiles}")
-
-        return profiles
+        return UserProfile.objects.filter(user=user)
 
     @action(detail=False, methods=['GET'])
     def user_books(self, request):
@@ -54,22 +49,17 @@ class UserProfileViewSet(viewsets.ModelViewSet):
             print(f"UserProfile not found for {user.username}")
             return Response({'detail': 'UserProfile does not exist for this user.'}, status=status.HTTP_404_NOT_FOUND)
 
-                
     @action(detail=False, methods=['POST'])
     def selected_books(self, request):
-        user_profile = self.get_object()
+        user_profile = request.user.userprofile
         book_id = request.data.get('book_id')
-
-        # Assuming you have a method to associate the book with the user
         user_profile.add_selected_book(book_id)
-
-        # Optionally, you can return a response if needed
         return Response({'message': 'Book selected successfully'})
-    
+
     def list(self, request, *args, **kwargs):
         user = self.request.user
         try:
-            user_profile = user.userprofile 
+            user_profile = user.userprofile
             user_books = SelectedBook.objects.filter(user_profile=user_profile)
             serializer = SelectedBookSerializer(user_books, many=True)
             return Response(serializer.data)

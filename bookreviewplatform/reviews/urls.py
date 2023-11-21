@@ -9,6 +9,7 @@ router.register(r'books', BookViewSet, basename='book')
 router.register(r'books/(?P<book_pk>\d+)/reviews', ReviewViewSet, basename='book-reviews')
 router.register(r'votes', VoteViewSet)
 router.register(r'user-profile', UserProfileViewSet, basename='user_profile')
+router.register(r'user-profile/(?P<user_pk>\d+)/selected_books', UserProfileViewSet, basename='user_profile_selected_books')
 router.register(r'reading-challenge', ReadingChallengeViewSet, basename='reading-challenge')
 
 urlpatterns = [

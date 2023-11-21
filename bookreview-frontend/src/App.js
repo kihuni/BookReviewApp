@@ -13,9 +13,15 @@ import NavBar from './components/NavBar';
 import api from './components/api';
 
 function App() {
+    console.log('Rendering App component');
     const [menuActive, setMenuActive] = useState(false);
     const [user, setUser] = useState(null);
     const [theme, setTheme] = useState('light');
+    const [selectedBookId, setSelectedBookId] = useState(null);
+
+    const handleBookSelection = (bookId) => {
+        setSelectedBookId(bookId);
+    };
 
     useEffect(() => {
         document.body.dataset.theme = theme;
@@ -34,9 +40,11 @@ function App() {
             };
             try {
                 const response = await api.get('/user-profile/', config);
+                console.log('User Profile Response:', response.data); // for debbugging
                 setUser(response.data);
             } catch (error) {
                 console.error("Error fetching user profile:", error);
+                console.log('Error response:', error.response);
             }
         }
     }
@@ -51,14 +59,21 @@ function App() {
             <div className='App'>
                 <main>
                     <Routes>
-                        <Route path="/" exact element={<BookList user={user} />} />
+                        <Route
+                            path="/"
+                            element={<BookList user={user} selectedBookId={selectedBookId} onBookSelect={handleBookSelection} />}
+                        />
                         <Route path="/create" element={<BookCreation user={user} />} />
                         <Route path="/books/edit/:id" element={<BookEdit />} />
                         <Route path="/books/:id" element={<BookDetail />} />
                         <Route path="/about" element={<About />} />
                         <Route path="/register" element={<Register />} />
                         <Route path="/login" element={<Login fetchUserProfile={fetchUserProfile} setUser={setUser} />} />
-                        <Route path="/user-profile" element={<UserProfile />} />
+                        {/* Pass selectedBookId to the UserProfile component */}
+                        <Route
+                            path="/user-profile"
+                            element={<UserProfile selectedBookId={selectedBookId} />}
+                        />
                     </Routes>
                 </main>
                 <footer></footer>

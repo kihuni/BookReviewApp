@@ -1,15 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import api from './api';
+import UserProfile from './UserProfile'; // Import the UserProfile component
 
 const BookList = ({ user }) => {
     const [books, setBooks] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [loading, setLoading] = useState(true);
+    const [selectedBookId, setSelectedBookId] = useState(null);
 
     useEffect(() => {
+        console.log('Fetching books...');
         async function fetchBooks() {
             try {
+                if (!searchQuery) {
+                    // Do not make the request if the query is empty
+                    return;
+                }
+
                 setLoading(true);
                 const response = await api.get('https://www.googleapis.com/books/v1/volumes', {
                     params: {
@@ -33,14 +41,17 @@ const BookList = ({ user }) => {
 
     const handleBookSelection = async (bookId) => {
         try {
-            // Make a request to your backend to associate the book with the user
-            await api.post('/user-profile/selected_books/', { book_id: bookId });
-            // Update local state or show a success message
-            //
+            const token = localStorage.getItem('token');
+            await api.post('/user-profile/selected_books/', { book_id: bookId }, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            // Updated the selectedBookId state
+            setSelectedBookId(bookId);
         } catch (error) {
             console.error('Error selecting book:', error);
             // Handle the error
-            //
         }
     };
 
@@ -82,6 +93,9 @@ const BookList = ({ user }) => {
                         </div>
                     ))
                 )}
+
+                {/* Pass the selectedBookId to the UserProfile component */}
+                <UserProfile selectedBookId={selectedBookId} />
             </div>
         </div>
     );
