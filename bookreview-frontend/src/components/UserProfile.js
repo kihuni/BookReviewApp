@@ -10,7 +10,6 @@ const UserProfile = ({ selectedBookId }) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    console.log('Fetching user profile data...');
     const fetchUserProfileData = async () => {
       const token = localStorage.getItem('token');
       const config = {

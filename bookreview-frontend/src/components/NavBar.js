@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import 'font-awesome/css/font-awesome.min.css';
-
 
 const NavBar = ({ user, setUser, theme, setTheme }) => {
     const navigate = useNavigate();
@@ -14,19 +13,28 @@ const NavBar = ({ user, setUser, theme, setTheme }) => {
         navigate('/login');
     };
 
+    useEffect(() => {
+        document.body.dataset.theme = theme;
+        if (menuActive) {
+            document.body.classList.add("menu-active");
+        } else {
+            document.body.classList.remove("menu-active");
+        }
+    }, [menuActive, theme]);
+
+    // Use this effect to log user changes
+    useEffect(() => {
+        console.log('User in NavBar:', user);
+    }, [user]);
+
     return (
         <div className='container'>
             <div className='header'>
                 <nav>
                     <Link className='link home' to="/">BookStation</Link>
-                    
 
                     {/* Hamburger Menu */}
-                    <div className="hamburger" onClick={() => {
-                        setMenuActive(prevState => !prevState)
-                        console.log(menuActive);
-
-                    } }>
+                    <div className="hamburger" onClick={() => setMenuActive(prevState => !prevState)}>
                         <div></div>
                         <div></div>
                         <div></div>

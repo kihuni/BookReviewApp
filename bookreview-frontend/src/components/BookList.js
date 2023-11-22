@@ -7,10 +7,10 @@ const BookList = ({ user }) => {
     const [books, setBooks] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [loading, setLoading] = useState(true);
-    const [selectedBookId, setSelectedBookId] = useState(null);
 
     useEffect(() => {
         console.log('Fetching books...');
+        console.log('User prop in BookList:', user);
         async function fetchBooks() {
             try {
                 if (!searchQuery) {
@@ -33,26 +33,10 @@ const BookList = ({ user }) => {
         }
 
         fetchBooks();
-    }, [searchQuery]);
+    }, [user, searchQuery]);
 
     const handleSearch = (e) => {
         setSearchQuery(e.target.value);
-    };
-
-    const handleBookSelection = async (bookId) => {
-        try {
-            const token = localStorage.getItem('token');
-            await api.post('/user-profile/selected_books/', { book_id: bookId }, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-            // Updated the selectedBookId state
-            setSelectedBookId(bookId);
-        } catch (error) {
-            console.error('Error selecting book:', error);
-            // Handle the error
-        }
     };
 
     return (
@@ -89,13 +73,12 @@ const BookList = ({ user }) => {
                                 {book.volumeInfo.authors?.join(', ')}
                             </p>
                             <p>{book.volumeInfo.description}</p>
-                            <button onClick={() => handleBookSelection(book.id)}>Select Book</button>
                         </div>
                     ))
                 )}
 
-                {/* Pass the selectedBookId to the UserProfile component */}
-                <UserProfile selectedBookId={selectedBookId} />
+                {/* Render UserProfile only if the user is logged in */}
+                {user && <UserProfile />}
             </div>
         </div>
     );

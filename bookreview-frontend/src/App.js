@@ -18,6 +18,8 @@ function App() {
     const [user, setUser] = useState(null);
     const [theme, setTheme] = useState('light');
     const [selectedBookId, setSelectedBookId] = useState(null);
+    const [loading, setLoading] = useState(true);
+
 
     const handleBookSelection = (bookId) => {
         setSelectedBookId(bookId);
@@ -31,7 +33,7 @@ function App() {
             document.body.classList.remove("menu-active");
         }
     }, [menuActive, theme]);
-
+    console.log('User state in App:', user);
     const fetchUserProfile = async () => {
         const token = localStorage.getItem('token');
         if (token) {
@@ -40,15 +42,24 @@ function App() {
             };
             try {
                 const response = await api.get('/user-profile/', config);
-                console.log('User Profile Response:', response.data); // for debbugging
+                console.log('User Profile Response:', response.data);
+    
+                // Assuming response.data has the expected structure (username, email, etc.)
                 setUser(response.data);
+    
+                // Log the user state after setting it
+                console.log('User state after setting:', user);
             } catch (error) {
                 console.error("Error fetching user profile:", error);
                 console.log('Error response:', error.response);
+            } finally {
+                setLoading(false);
             }
         }
-    }
-
+    };
+    
+    
+    
     useEffect(() => {
         fetchUserProfile();
     }, []);
@@ -61,7 +72,13 @@ function App() {
                     <Routes>
                         <Route
                             path="/"
-                            element={<BookList user={user} selectedBookId={selectedBookId} onBookSelect={handleBookSelection} />}
+                            element={
+                                loading ? (
+                                    <p>Loading...</p>
+                                ) : (
+                                    <BookList user={user} selectedBookId={selectedBookId} onBookSelect={handleBookSelection} />
+                                )
+                            }
                         />
                         <Route path="/create" element={<BookCreation user={user} />} />
                         <Route path="/books/edit/:id" element={<BookEdit />} />
@@ -72,7 +89,7 @@ function App() {
                         {/* Pass selectedBookId to the UserProfile component */}
                         <Route
                             path="/user-profile"
-                            element={<UserProfile selectedBookId={selectedBookId} />}
+                            element={user && <UserProfile selectedBookId={selectedBookId} />}
                         />
                     </Routes>
                 </main>
