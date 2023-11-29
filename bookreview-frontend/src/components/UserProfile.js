@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import BookItem from './BookItem';
 import api from './api';
 import '../style.css';
 
@@ -19,7 +20,28 @@ const UserProfile = ({ selectedBookId }) => {
       try {
         // Fetch user's selected books
         const selectedBooksResponse = await api.get('/user-profile/user_books/', config);
-        setUserSelectedBooks(selectedBooksResponse.data);
+        const selectedBooksData = selectedBooksResponse.data;
+
+        // Fetch book details for each selected book
+        const selectedBooksPromises = selectedBooksData.map(async (selectedBook) => {
+          try {
+            const bookResponse = await api.get(`/books/${selectedBook.book_id}/`, config);
+            return {
+              id: selectedBook.id,
+              book: bookResponse.data,
+            };
+          } catch (error) {
+            console.error(`Error fetching book details for book ID ${selectedBook.book_id}:`, error);
+            return null; // Handle the error gracefully
+          }
+        });
+
+        const selectedBooksDetails = await Promise.all(selectedBooksPromises);
+
+        // Filter out any null values (books with fetch errors)
+        const filteredSelectedBooksDetails = selectedBooksDetails.filter(Boolean);
+
+        setUserSelectedBooks(filteredSelectedBooksDetails);
 
         // Fetch user's reading challenge
         const challengeResponse = await api.get('/reading-challenge/', config);
@@ -59,23 +81,13 @@ const UserProfile = ({ selectedBookId }) => {
     <div className="userProfile">
       {/* Render user's selected books */}
       <h3>Your Selected Books:</h3>
-        {userSelectedBooks && userSelectedBooks.length > 0 ? (
-          userSelectedBooks.map((selectedBook) => (
-            <div key={selectedBook.id} className={`containerList`}>
-              <h2 className="bookList">
-                <span>Book Title:</span> {selectedBook.book && selectedBook.book.title}
-              </h2>
-              <p className="booklist">
-                <span>By </span>
-                {selectedBook.book && selectedBook.book.author}
-              </p>
-              <p>{selectedBook.book && selectedBook.book.description}</p>
-            </div>
-          ))
-        ) : (
-          <p>No selected books.</p>
-        )}
-
+      {userSelectedBooks && userSelectedBooks.length > 0 ? (
+        userSelectedBooks.map((selectedBook) => (
+          <BookItem key={selectedBook.id} selectedBook={selectedBook} />
+        ))
+      ) : (
+        <p>No selected books.</p>
+      )}
 
       {/* Render user's reading challenge */}
       {readingChallenge && (
@@ -92,12 +104,12 @@ const UserProfile = ({ selectedBookId }) => {
         <div>
           <h3>Recommended Books</h3>
           {recommendedBooks.map((book) => (
-              <div key={book.title}>
-                {book.title && <h4>{book.title}</h4>}
-                {book.author && <p>By {book.author}</p>}
-                {book.description && <p>{book.description}</p>}
-              </div>
-            ))}
+            <div key={book.title}>
+              {book.title && <h4>{book.title}</h4>}
+              {book.author && <p>By {book.author}</p>}
+              {book.description && <p>{book.description}</p>}
+            </div>
+          ))}
         </div>
       ) : (
         <p>No recommended books.</p>

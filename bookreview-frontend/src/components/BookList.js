@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import api from './api';
-import UserProfile from './UserProfile'; // Import the UserProfile component
+import UserProfile from './UserProfile';
+import { useLocation } from 'react-router-dom';
+
 
 const BookList = ({ user }) => {
     const [books, setBooks] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [loading, setLoading] = useState(true);
+    const location = useLocation();
 
     useEffect(() => {
         console.log('Fetching books...');
@@ -78,7 +81,7 @@ const BookList = ({ user }) => {
                 )}
 
                 {/* Render UserProfile only if the user is logged in */}
-                {user && <UserProfile />}
+                {user && location.pathname === '/user-profile' && <UserProfile />}
             </div>
         </div>
     );

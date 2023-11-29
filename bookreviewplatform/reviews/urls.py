@@ -1,8 +1,17 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import BookViewSet, ReadingChallengeViewSet, ReviewViewSet, UserProfileViewSet, VoteViewSet, UserViewSet
+from .views import (
+    BookViewSet,
+    ReadingChallengeViewSet,
+    ReviewViewSet,
+    UserProfileViewSet,
+    VoteViewSet,
+    UserViewSet,
+)
 from django.conf import settings
 from django.conf.urls.static import static
+
+
 
 router = DefaultRouter()
 router.register(r'books', BookViewSet, basename='book')
@@ -21,6 +30,7 @@ urlpatterns = [
     path('reviews/<int:pk>/vote/', ReviewViewSet.as_view({'post': 'vote'})),
     path('reviews/<int:pk>/upload-image/', ReviewViewSet.as_view({'post': 'upload_image'})),
     path('user/google-login/', UserViewSet.as_view({'post': 'google_login'}), name='google-login'),
+
 ]
 
 if settings.DEBUG:

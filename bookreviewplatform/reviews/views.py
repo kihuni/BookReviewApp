@@ -17,6 +17,8 @@ from .serializers import SelectedBookSerializer, BookSerializer, UserProfileSeri
 from django.contrib.auth import authenticate
 from rest_framework.permissions import AllowAny, IsAuthenticated, BasePermission, SAFE_METHODS
 from django.db.models import Count
+from drf_yasg.views import get_schema_view
+
 
 jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
 jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
@@ -81,11 +83,13 @@ class ReadOnly(BasePermission):
         return request.method in SAFE_METHODS
 
 class BookViewSet(viewsets.ModelViewSet):
-    queryset = Book.objects.none()
+    queryset = Book.objects.all()
     serializer_class = BookSerializer
     permission_classes = [IsAuthenticated | ReadOnly]
 
     def retrieve(self, request, *args, **kwargs):
+        book_id = kwargs.get('pk')
+        print(f"Received request for book ID: {book_id}")
         instance = self.get_object()
         serializer = self.get_serializer(instance)
         book_data = serializer.data
@@ -95,27 +99,34 @@ class BookViewSet(viewsets.ModelViewSet):
         api_key = os.environ.get('GOOGLE_BOOK_API_KEY')
         params = {'q': f'{book_data["title"]} {book_data["author"]}', 'key': api_key}
 
-        response = requests.get(google_books_api_url, params=params)
+        try:
+            response = requests.get(google_books_api_url, params=params)
 
-        # Check if the request was successful (status code 200)
-        if response.status_code == 200:
-            google_books_data = response.json()
+            # Print the URL and response content for debugging
+            print(f"Google Books API URL: {response.url}")
+            print(f"Google Books API Response: {response.content}")
 
-            # Update the book_data with additional details
-            if 'items' in google_books_data:
-                item = google_books_data['items'][0]
-                book_data['google_books_data'] = {
-                    'description': item['volumeInfo'].get('description', ''),
-                    'published_date': item['volumeInfo'].get('publishedDate', ''),
-                }
+            # Check if the request was successful (status code 200)
+            if response.status_code == 200:
+                google_books_data = response.json()
+                # Update the book_data with additional details
+                if 'items' in google_books_data:
+                    item = google_books_data['items'][0]
+                    book_data['google_books_data'] = {
+                        'description': item['volumeInfo'].get('description', ''),
+                        'published_date': item['volumeInfo'].get('publishedDate', ''),
+                    }
+                else:
+                    print(f"Error: 'items' key not found in Google Books API response.")
             else:
-                # Handle the case where 'items' key is not present in the response
-                print(f"Error: 'items' key not found in Google Books API response.")
-        else:
-            # Handle the case where the Google Books API request was not successful
-            print(f"Error fetching data from Google Books API. Status code: {response.status_code}")
+                print(f"Error fetching data from Google Books API. Status code: {response.status_code}")
 
-        return Response(book_data)
+            return Response(book_data)
+
+        except Exception as e:
+            print(f"Error in Google Books API request: {e}")
+            return Response({'detail': 'Error in Google Books API request.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
     @action(detail=True, methods=['GET'])
     def recommendations(self, request, pk=None):
