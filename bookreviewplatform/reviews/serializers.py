@@ -1,6 +1,6 @@
 from rest_framework import serializers
+from .models import Book, UserProfile, SelectedBook
 from django.contrib.auth.models import User
-from .models import Book, ReadingChallenge, Review, UserProfile, Vote, SelectedBook
 
 class SelectedBookSerializer(serializers.ModelSerializer):
     class Meta:
@@ -14,23 +14,18 @@ class UserProfileSerializer(serializers.ModelSerializer):
         model = UserProfile
         fields = '__all__'
 
-class ReadingChallengeSerializer(serializers.ModelSerializer):
+class BookSerializer(serializers.ModelSerializer):
     class Meta:
-        model = ReadingChallenge
-        fields = '__all__'
-
-class ReviewSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Review
-        fields = '__all__'
-
-class VoteSerializers(serializers.ModelSerializer):
-    class Meta:
-        model = Vote
+        model = Book
         fields = '__all__'
         
 class UserSerializers(serializers.ModelSerializer):
     selected_books = SelectedBookSerializer(many=True, read_only=True)
+    
+    
+    class Meta:
+        model = User
+        fields = '__all__'
 
     def create(self, validated_data):
         password = validated_data.pop('password', None)
@@ -41,13 +36,6 @@ class UserSerializers(serializers.ModelSerializer):
         user.save()
 
         # Create or retrieve UserProfile for the user
-        user_profile, created = UserProfile.objects.get_or_create(user=user)
+       # user_profile, created = UserProfile.objects.get_or_create(user=user)
 
         return user
-
-
-
-class BookSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Book
-        fields = '__all__'

@@ -1,5 +1,4 @@
 # views.py
-
 from django.shortcuts import render
 from rest_framework import viewsets, status
 from rest_framework.response import Response
@@ -13,83 +12,22 @@ import os
 import requests
 from django.http import JsonResponse
 import requests
-from .serializers import SelectedBookSerializer, BookSerializer, UserProfileSerializer, ReadingChallengeSerializer, ReviewSerializer, VoteSerializers, UserSerializers
+from .serializers import SelectedBookSerializer, BookSerializer, UserProfileSerializer, UserSerializers
 from django.contrib.auth import authenticate
-from rest_framework.permissions import AllowAny, IsAuthenticated, BasePermission, SAFE_METHODS
-from django.db.models import Count
-from drf_yasg.views import get_schema_view
+from rest_framework.permissions import AllowAny, IsAuthenticated, BasePermission, SAFE_METHODS,IsAuthenticatedOrReadOnly
+
 
 
 jwt_payload_handler = api_settings.JWT_PAYLOAD_HANDLER
 jwt_encode_handler = api_settings.JWT_ENCODE_HANDLER
 
-class UserProfileViewSet(viewsets.ModelViewSet):
-    serializer_class = UserProfileSerializer
-    permission_classes = [IsAuthenticated]
-    lookup_field = 'pk'
-
-    def get_queryset(self):
-        user = self.request.user
-        return UserProfile.objects.filter(user=user)
-
-    @action(detail=False, methods=['GET'])
-    def user_books(self, request):
-        user = self.request.user
-        print(f"Current user in user_books action: {user.username}")
-
-        try:
-            user_profile = user.userprofile
-            user_books = SelectedBook.objects.filter(user_profile=user_profile)
-            serializer = SelectedBookSerializer(user_books, many=True)
-
-            # Print the selected books for debugging
-            print(f"Selected books for {user.username}: {serializer.data}")
-
-            return Response(serializer.data)
-        except UserProfile.DoesNotExist:
-            # Handle the case where UserProfile doesn't exist for the user
-            print(f"UserProfile not found for {user.username}")
-            return Response({'detail': 'UserProfile does not exist for this user.'}, status=status.HTTP_404_NOT_FOUND)
-
-    @action(detail=False, methods=['POST'])
-    def selected_books(self, request):
-        user_profile = request.user.userprofile
-        book_id = request.data.get('book_id')
-        user_profile.add_selected_book(book_id)
-        return Response({'message': 'Book selected successfully'})
-
-    def list(self, request, *args, **kwargs):
-        user = self.request.user
-        try:
-            user_profile = user.userprofile
-            user_books = SelectedBook.objects.filter(user_profile=user_profile)
-            serializer = SelectedBookSerializer(user_books, many=True)
-            return Response(serializer.data)
-        except UserProfile.DoesNotExist:
-            return Response({'detail': 'UserProfile does not exist for this user.'}, status=status.HTTP_404_NOT_FOUND)
-
-
-
-
-class ReadingChallengeViewSet(viewsets.ModelViewSet):
-    serializer_class = ReadingChallengeSerializer
-    permission_classes = [IsAuthenticated]
-
-    def get_queryset(self):
-        return ReadingChallenge.objects.filter(user=self.request.user)
-
-class ReadOnly(BasePermission):
-    def has_permission(self, request, view):
-        return request.method in SAFE_METHODS
-
 class BookViewSet(viewsets.ModelViewSet):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    permission_classes = [IsAuthenticated | ReadOnly]
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
     def retrieve(self, request, *args, **kwargs):
         book_id = kwargs.get('pk')
-        print(f"Received request for book ID: {book_id}")
         instance = self.get_object()
         serializer = self.get_serializer(instance)
         book_data = serializer.data
@@ -102,14 +40,8 @@ class BookViewSet(viewsets.ModelViewSet):
         try:
             response = requests.get(google_books_api_url, params=params)
 
-            # Print the URL and response content for debugging
-            print(f"Google Books API URL: {response.url}")
-            print(f"Google Books API Response: {response.content}")
-
-            # Check if the request was successful (status code 200)
             if response.status_code == 200:
                 google_books_data = response.json()
-                # Update the book_data with additional details
                 if 'items' in google_books_data:
                     item = google_books_data['items'][0]
                     book_data['google_books_data'] = {
@@ -127,7 +59,38 @@ class BookViewSet(viewsets.ModelViewSet):
             print(f"Error in Google Books API request: {e}")
             return Response({'detail': 'Error in Google Books API request.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+    @action(detail=False, methods=['GET'])
+    def search(self, request):
+            query = request.query_params.get('query', '')
+            
+            # Perform a search using the Google Books API
+            google_books_api_url = 'https://www.googleapis.com/books/v1/volumes'
+            api_key = os.environ.get('GOOGLE_BOOK_API_KEY')
+            params = {'q': query, 'key': api_key}
 
+            try:
+                response = requests.get(google_books_api_url, params=params)
+
+                if response.status_code == 200:
+                    google_books_data = response.json()
+                    # Extract relevant book information from the API response
+                    books = []
+                    for item in google_books_data.get('items', []):
+                        books.append({
+                            'title': item['volumeInfo'].get('title', ''),
+                            'author': ', '.join(item['volumeInfo'].get('authors', [])),
+                            'description': item['volumeInfo'].get('description', ''),
+                            'published_date': item['volumeInfo'].get('publishedDate', ''),
+                        })
+                    return Response(books)
+                else:
+                    print(f"Error fetching data from Google Books API. Status code: {response.status_code}")
+                    return Response({'detail': 'Error in Google Books API request.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+            except Exception as e:
+                print(f"Error in Google Books API request: {e}")
+                return Response({'detail': 'Error in Google Books API request.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
     @action(detail=True, methods=['GET'])
     def recommendations(self, request, pk=None):
         book = self.get_object()
@@ -161,10 +124,33 @@ class BookViewSet(viewsets.ModelViewSet):
             print(f"Error fetching recommendations from Google Books API: {e}")
             return []
         
-class VoteViewSet(viewsets.ModelViewSet):
-    queryset = Vote.objects.all()
-    serializer_class = VoteSerializers
+class SelectedBookViewSet(viewsets.ModelViewSet):
+    queryset = SelectedBook.objects.all()
+    serializer_class = SelectedBookSerializer
+    permission_classes = [IsAuthenticated]
 
+    @action(detail=False, methods=['GET'])
+    def user_books(self, request):
+        user_books = SelectedBook.objects.filter(user_profile__user=request.user)
+        serializer = SelectedBookSerializer(user_books, many=True)
+        return Response(serializer.data)
+
+    @action(detail=False, methods=['POST'])
+    def selected_books(self, request):
+        user_profile = request.user.userprofile
+        book_id = request.data.get('book_id')
+        user_profile.add_selected_book(book_id)
+        return Response({'message': 'Book selected successfully'})
+
+class UserProfileViewSet(viewsets.ModelViewSet):
+    serializer_class = UserProfileSerializer
+    permission_classes = [IsAuthenticated]
+    lookup_field = 'pk'
+
+    def get_queryset(self):
+        user = self.request.user
+        return UserProfile.objects.filter(user=user)
+    
 class UserViewSet(viewsets.GenericViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializers
@@ -205,43 +191,6 @@ class UserViewSet(viewsets.GenericViewSet):
             return Response({'token': access_token})
         
         return Response({"detail": "Invalid credentials."}, status=status.HTTP_401_UNAUTHORIZED)
-
-
-
-    @action(detail=False, methods=['GET'])
-    def profile(self, request):
-        user_profile = UserProfile.objects.get(user=request.user)
-        serializer = UserProfileSerializer(user_profile)
-        return Response(serializer.data)
-    
-    @action(detail=False, methods=['GET'])
-    def user_books(self, request):
-        user_books = SelectedBook.objects.filter(user_profile__user=self.request.user)
-        serializer = SelectedBookSerializer(user_books, many=True)
-        return Response(serializer.data)
-
-    @action(detail=False, methods=['GET'])
-    def reading_challenge(self, request):
-        reading_challenge = ReadingChallenge.objects.get(user=request.user)
-        serializer = ReadingChallengeSerializer(reading_challenge)
-        return Response(serializer.data)
-
-    @action(detail=False, methods=['POST'])
-    def set_reading_challenge(self, request):
-        serializer = ReadingChallengeSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save(user=request.user)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    @action(detail=False, methods=['PATCH'])
-    def update_reading_challenge(self, request):
-        reading_challenge = ReadingChallenge.objects.get(user=request.user)
-        serializer = ReadingChallengeSerializer(reading_challenge, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     @action(detail=False, methods=['POST'])
     def google_login(self, request):
@@ -298,19 +247,3 @@ class UserViewSet(viewsets.GenericViewSet):
 
             # Return a specific error message to the client
             return {'error': 'Failed to verify Google token.', 'error_description': str(e)}
-
-class ReviewViewSet(viewsets.ModelViewSet):
-    serializer_class = ReviewSerializer
-    permission_classes = [IsAuthenticated]
-
-    @action(detail=True, methods=['POST'])
-    def vote(self, request, pk=None):
-        review = self.get_object()
-        value = request.data.get('value')
-        vote, created = Vote.objects.get_or_create(review=review, user=request.user, defaults={'value': value})
-
-        if not created:
-            vote.value = value
-            vote.save()
-
-        return Response({"message": "Vote casted successfully!"}, status=status.HTTP_201_CREATED)
