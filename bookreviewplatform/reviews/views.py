@@ -149,7 +149,9 @@ class UserProfileViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        return UserProfile.objects.filter(user=user)
+        if user.is_authenticated:
+            return UserProfile.objects.filter(user=user)
+        return UserProfile.objects.none()
     
 class UserViewSet(viewsets.GenericViewSet):
     queryset = User.objects.all()

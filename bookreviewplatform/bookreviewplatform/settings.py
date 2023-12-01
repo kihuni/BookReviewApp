@@ -37,12 +37,12 @@ INSTALLED_APPS = [
     'reviews',
     'corsheaders',
     'rest_framework',
+    'drf_yasg',
     'rest_framework.authtoken',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
-    'drf_yasg',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -162,3 +162,4 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 from whitenoise.storage import CompressedManifestStaticFilesStorage
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
