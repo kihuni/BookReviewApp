@@ -1,11 +1,13 @@
 # views.py
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from django.contrib.auth.models import User
 from rest_framework.decorators import action
 from rest_framework_jwt.settings import api_settings
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.decorators import action
+from rest_framework.response import Response
 from rest_framework import mixins
 from .models import *
 import os
@@ -36,6 +38,8 @@ class BookViewSet(viewsets.ModelViewSet):
         google_books_api_url = 'https://www.googleapis.com/books/v1/volumes'
         api_key = os.environ.get('GOOGLE_BOOK_API_KEY')
         params = {'q': f'{book_data["title"]} {book_data["author"]}', 'key': api_key}
+        print(f"Request URL: {google_books_api_url}")
+        print(f"Request Params: {params}")
 
         try:
             response = requests.get(google_books_api_url, params=params)
@@ -57,39 +61,63 @@ class BookViewSet(viewsets.ModelViewSet):
 
         except Exception as e:
             print(f"Error in Google Books API request: {e}")
+            print(f"Response Content: {response.content}")
             return Response({'detail': 'Error in Google Books API request.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
     @action(detail=False, methods=['GET'])
     def search(self, request):
-            query = request.query_params.get('query', '')
-            
-            # Perform a search using the Google Books API
-            google_books_api_url = 'https://www.googleapis.com/books/v1/volumes'
-            api_key = os.environ.get('GOOGLE_BOOK_API_KEY')
-            params = {'q': query, 'key': api_key}
+        query = request.query_params.get('query', '')
 
-            try:
-                response = requests.get(google_books_api_url, params=params)
+        # Print the final request details
+        google_books_api_url = 'https://www.googleapis.com/books/v1/volumes'
+        api_key = os.environ.get('GOOGLE_BOOK_API_KEY')
+        params = {'q': query, 'key': api_key}
+        print(f"Request URL: {google_books_api_url}")
+        print(f"Request Params: {params}")
 
-                if response.status_code == 200:
-                    google_books_data = response.json()
-                    # Extract relevant book information from the API response
-                    books = []
-                    for item in google_books_data.get('items', []):
-                        books.append({
-                            'title': item['volumeInfo'].get('title', ''),
-                            'author': ', '.join(item['volumeInfo'].get('authors', [])),
-                            'description': item['volumeInfo'].get('description', ''),
-                            'published_date': item['volumeInfo'].get('publishedDate', ''),
-                        })
-                    return Response(books)
-                else:
-                    print(f"Error fetching data from Google Books API. Status code: {response.status_code}")
-                    return Response({'detail': 'Error in Google Books API request.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        try:
+            response = requests.get(google_books_api_url, params=params)
 
-            except Exception as e:
-                print(f"Error in Google Books API request: {e}")
+            if response.status_code == 200:
+                google_books_data = response.json()
+                # Extract relevant book information from the API response
+                books = []
+                for item in google_books_data.get('items', []):
+                    book_data = {
+                        'title': item['volumeInfo'].get('title', ''),
+                        'author': ', '.join(item['volumeInfo'].get('authors', [])),
+                        'description': item['volumeInfo'].get('description', ''),
+                        'published_date': item['volumeInfo'].get('publishedDate', ''),
+                    }
+                    books.append(book_data)
+
+                return Response(books)
+            else:
+                print(f"Error fetching data from Google Books API. Status code: {response.status_code}")
                 return Response({'detail': 'Error in Google Books API request.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        except Exception as e:
+            print(f"Error in Google Books API request: {e}")
+            print(f"Response Content: {response.content}")
+            return Response({'detail': 'Error in Google Books API request.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    
+    @action(detail=False, methods=['POST'])
+    def save_book(self, request):
+        book_data = request.data.get('book_data', {})
+
+        # Validate the book_data to ensure it has the required fields (title, author, etc.)
+        if not all(key in book_data for key in ['title', 'author', 'description', 'published_date']):
+            return Response({'detail': 'Invalid book data. Required fields: title, author, description, published_date.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if request.user.is_authenticated:
+            user_profile = get_object_or_404(UserProfile, user=request.user)
+            user_profile.add_selected_book(book_data)
+
+            return Response({'message': 'Book selected successfully'})
+        else:
+            return Response({'detail': 'Authentication required to save a book.'}, status=status.HTTP_401_UNAUTHORIZED)
     
     @action(detail=True, methods=['GET'])
     def recommendations(self, request, pk=None):

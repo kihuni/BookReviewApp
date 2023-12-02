@@ -9,8 +9,8 @@ const BookDetail = () => {
     useEffect(() => {
         async function fetchBookDetails() {
             try {
-                const bookResponse = await api.get(`https://www.googleapis.com/books/v1/volumes/${id}`);
-                setBook(bookResponse.data.volumeInfo);
+                const response = await api.get(`/books/${id}/`);
+                setBook(response.data);
             } catch (error) {
                 console.error("Error fetching book details:", error);
             }
@@ -26,9 +26,9 @@ const BookDetail = () => {
 
     return (
         <div className='bookdetails'>
-            <img src={book.imageLinks?.thumbnail} alt={book.title} className="bookCover" />
+            <img src={book.cover_image} alt={book.title} className="bookCover" />
             <h2>{book.title}</h2>
-            <p>By {book.authors?.join(', ')}</p>
+            <p>By {book.author}</p>
 
             {/* Render HTML content */}
             <div dangerouslySetInnerHTML={{ __html: book.description }} />
@@ -36,6 +36,6 @@ const BookDetail = () => {
             <a href={readUrl} target="_blank" rel="noopener noreferrer">Read on Google Books</a>
         </div>
     );
-}
+};
 
 export default BookDetail;

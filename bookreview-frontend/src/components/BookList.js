@@ -9,6 +9,7 @@ const BookList = ({ user }) => {
     const [books, setBooks] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null); 
     const location = useLocation();
 
     useEffect(() => {
@@ -22,21 +23,33 @@ const BookList = ({ user }) => {
                 }
 
                 setLoading(true);
-                const response = await api.get('https://www.googleapis.com/books/v1/volumes', {
+                const response = await api.get('/books/search/', {
                     params: {
                         q: searchQuery,
                     },
                 });
-                setBooks(response.data.items);
+                setBooks(response.data);
             } catch (error) {
                 console.error('Error fetching books:', error);
+
+                    // Log more details about the error
+                if (error.response) {
+                    console.error('Error response from server:', error.response.data);
+                } else if (error.request) {
+                    console.error('No response received:', error.request);
+                } else {
+                    console.error('Error setting up the request:', error.message);
+                }
+
+                // Display a user-friendly error message
+                setError('Failed to fetch books. Please try again later.');
             } finally {
                 setLoading(false);
             }
         }
 
         fetchBooks();
-    }, [user, searchQuery]);
+    }, [searchQuery]);
 
     const handleSearch = (e) => {
         setSearchQuery(e.target.value);
@@ -64,18 +77,18 @@ const BookList = ({ user }) => {
                     <p>Loading...</p>
                 ) : (
                     books.map((book) => (
-                        <div key={book.id} className={`containerList`}>
-                            <img src={book.volumeInfo.imageLinks?.thumbnail} alt={book.volumeInfo.title} />
+                        <div key={book.title} className={`containerList`}>
+                            <img src={book.cover_image} alt={book.title} />
                             <h2 className="bookList">
                                 <Link to={`/books/${book.id}`}>
-                                    <span>Book Title:</span> {book.volumeInfo.title}
+                                    <span>Book Title:</span> {book.title}
                                 </Link>
                             </h2>
                             <p className="booklist">
                                 <span>By </span>
-                                {book.volumeInfo.authors?.join(', ')}
+                                {book.author}
                             </p>
-                            <p>{book.volumeInfo.description}</p>
+                            <p>{book.description}</p>
                         </div>
                     ))
                 )}

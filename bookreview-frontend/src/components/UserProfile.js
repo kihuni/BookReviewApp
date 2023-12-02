@@ -24,16 +24,16 @@ const UserProfile = ({ selectedBookId }) => {
 
         // Fetch book details for each selected book
         const selectedBooksPromises = selectedBooksData.map(async (selectedBook) => {
-          try {
-            const bookResponse = await api.get(`/books/${selectedBook.book_id}/`, config);
-            return {
-              id: selectedBook.id,
-              book: bookResponse.data,
-            };
-          } catch (error) {
-            console.error(`Error fetching book details for book ID ${selectedBook.book_id}:`, error);
-            return null; // Handle the error gracefully
-          }
+            try {
+                const bookResponse = await api.get(`/books/${selectedBook.book_id}/`, config);
+                return {
+                    id: selectedBook.id,
+                    book: bookResponse.data,
+                };
+            } catch (error) {
+                console.error(`Error fetching book details for book ID ${selectedBook.book_id}:`, error);
+                return null; // Handle the error gracefully
+            }
         });
 
         const selectedBooksDetails = await Promise.all(selectedBooksPromises);
@@ -43,39 +43,39 @@ const UserProfile = ({ selectedBookId }) => {
 
         setUserSelectedBooks(filteredSelectedBooksDetails);
 
-        // Fetch user's reading challenge
-        const challengeResponse = await api.get('/reading-challenge/', config);
-        setReadingChallenge(challengeResponse.data);
+       // Fetch user's reading challenge
+       const challengeResponse = await api.get('/reading-challenge/', config);
+       setReadingChallenge(challengeResponse.data);
 
-        // Fetch recommended books based on the selected book
-        if (selectedBookId) {
-          const recommendedBooksResponse = await api.get(`/books/${selectedBookId}/recommendations/`, config);
-          setRecommendedBooks(recommendedBooksResponse.data);
-        }
+       // Fetch recommended books based on the selected book
+       if (selectedBookId) {
+           const recommendedBooksResponse = await api.get(`/books/${selectedBookId}/recommendations/`, config);
+           setRecommendedBooks(recommendedBooksResponse.data);
+       }
 
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching user profile data:', error);
+       setLoading(false);
+   } catch (error) {
+       console.error('Error fetching user profile data:', error);
 
-        if (error.response) {
-          // Handle different types of errors (server, network, etc.)
-        }
+       if (error.response) {
+        // Handle different types of errors (server, network, etc.)
+    }
 
-        setError('Error fetching user profile data. Please try again later.');
-        setLoading(false);
-      }
-    };
+    setError('Error fetching user profile data. Please try again later.');
+    setLoading(false);
+}
+};
 
     fetchUserProfileData();
   }, [selectedBookId]);
 
   if (loading) {
     return <p>Loading...</p>;
-  }
+}
 
-  if (error) {
+if (error) {
     return <p>{error}</p>;
-  }
+}
 
   return (
     <div className="userProfile">
